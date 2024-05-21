@@ -30,7 +30,7 @@ services:
 
   bachhoasi-api:
     container_name: bachhoasi-api-management
-    image: bach-hoa-si-api:latest
+    image: ${DOCKER_USERNAME}/bach-hoa-si-api:latest
     ports:
       - ${PORT}:${PORT}
     restart: always
