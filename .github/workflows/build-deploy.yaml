@@ -24,7 +24,7 @@ jobs:
           tags: ${{secrets.DOCKER_USERNAME}}/bach-hoa-si-api:latest
   
   staging-api-deploy:
-    name: Deploy Staging API Manager To F-Code Server For Testing
+    name: Deploy Staging API Manager To Google Service Server For Testing
     runs-on: deploy
     needs: bach-hoa-si-api-build
     env:
