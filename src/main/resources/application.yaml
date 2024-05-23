@@ -41,7 +41,7 @@ aws:
 server:
     servlet:
         context-path: /api/v1
-    port: 8080
+    port: ${PORT}
 
 springdoc:
     api-docs:
@@ -62,7 +62,3 @@ access-token:
 
 refresh-token:
     max-age: ${REFRESH_TOKEN_EXT:315360000}
-
-app:
-    jwtSecret: ${JWT_SECRET}
-    jwtExpiration: ${JWT_EXPIRATION}
