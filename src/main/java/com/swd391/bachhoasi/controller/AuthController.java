@@ -3,7 +3,9 @@ package com.swd391.bachhoasi.controller;
 import com.swd391.bachhoasi.model.dto.request.LoginDto;
 import com.swd391.bachhoasi.model.dto.response.LoginResponse;
 import com.swd391.bachhoasi.service.AuthService;
-import lombok.AllArgsConstructor;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
