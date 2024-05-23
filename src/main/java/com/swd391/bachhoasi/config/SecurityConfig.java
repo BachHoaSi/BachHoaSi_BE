@@ -43,7 +43,6 @@ public class SecurityConfig {
         http.addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> {
                     logout.logoutUrl("/auth/logout");
-                    logout.addLogoutHandler(null);
                     logout.logoutSuccessHandler(
                             (request, response, authorization) -> SecurityContextHolder.clearContext());
                 });
