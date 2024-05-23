@@ -41,7 +41,7 @@ aws:
 server:
     servlet:
         context-path: /api/v1
-    port: 8000
+    port: ${PORT}
 
 springdoc:
     api-docs:
