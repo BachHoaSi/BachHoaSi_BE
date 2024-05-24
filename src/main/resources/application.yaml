@@ -42,6 +42,8 @@ server:
     servlet:
         context-path: /api/v1
     port: ${PORT}
+    ssl:
+        enabled: true
 
 springdoc:
     api-docs:
