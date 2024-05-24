@@ -36,7 +36,7 @@ public class SwaggerConfig {
         serverList.add(server);
         if(!currentDomain.equals("null")){
             server = new Server();
-            server.setUrl(String.format("%s%s", currentDomain, contextPath));
+            server.setUrl(String.format("https://%s%s", currentDomain, contextPath));
             server.setDescription(String.format("Server URL in %s environment", envString));
             serverList.add(server);
         }
