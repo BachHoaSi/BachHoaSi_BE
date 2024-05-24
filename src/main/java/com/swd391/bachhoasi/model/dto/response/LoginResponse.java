@@ -30,7 +30,7 @@ public class LoginResponse {
 
     public HttpHeaders getAuthenticationHeader(){
         var header =  new HttpHeaders();
-        header.add("Authorization", String.format("%s %s", TextUtils.toCamelCase(tokenType.toString()) , accessToken));
+        header.add("Authorization", String.format("%s %s", TextUtils.toCamelCase(tokenType.toString(), true) , accessToken));
         return header;
     }
 }
