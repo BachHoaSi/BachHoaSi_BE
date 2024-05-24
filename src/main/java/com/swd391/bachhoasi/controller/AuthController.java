@@ -2,6 +2,7 @@ package com.swd391.bachhoasi.controller;
 
 import com.swd391.bachhoasi.model.dto.request.LoginDto;
 import com.swd391.bachhoasi.model.dto.response.LoginResponse;
+import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,19 +23,19 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody LoginDto loginDto){
-        try {
-            LoginResponse jwtAuthResponse = authService.login(loginDto);
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + jwtAuthResponse.getAccessToken());
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(jwtAuthResponse);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    e.getMessage());
-        }
+    @PostMapping("/authentication")
+    public ResponseEntity<ResponseObject> login(@RequestBody LoginDto loginDto){
+        LoginResponse jwtAuthResponse = authService.login(loginDto);
+        var responseObject = ResponseObject.builder()
+            .code("AUTH_SUCCESS")
+            .message("Welcome To Bach Hoa Si")
+            .status(HttpStatus.OK)
+            .isSuccess(true)
+            .data(jwtAuthResponse)
+            .build();
+        return ResponseEntity.ok()
+            .headers(jwtAuthResponse.getAuthenticationHeader())
+            .body(responseObject);
     }
 
 }
