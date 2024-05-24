@@ -58,6 +58,6 @@ jobs:
         username: ${{secrets.DOCKER_USERNAME}}
         password: ${{secrets.DOCKER_PASSWORD}}
     - name: Clean Container, Image And Prepare For Deploy
-      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-api-test down --rmi all
+      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-api-test down bachhoasi-api --rmi ${{secrets.DOCKER_USERNAME}}/bach-hoa-si-api:latest
     - name: Deploy API
-      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-api-test up -d
+      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-api-test up -d bachhoasi-api
