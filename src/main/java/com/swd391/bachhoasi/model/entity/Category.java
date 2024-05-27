@@ -28,7 +28,7 @@ public class Category {
     private BigDecimal id;
     @Column(name = "Name", columnDefinition = "varchar", length = 20)
     private String name;
-    @Column(name = "Description")
+    @Column(name = "Description", columnDefinition = "text")
     private String description;
     @Column(name = "CreatedDate")
     private Date createdDate;
