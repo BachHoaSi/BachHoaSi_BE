@@ -29,6 +29,8 @@ public class Admin {
     private String username;
     @Column(name = "HashPassword", nullable = false, columnDefinition = "varchar", length = 64)
     private String hashPassword;
+    @Column(name = "Fullname")
+    private String fullName;
     @Column(name = "Role", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Role role;
