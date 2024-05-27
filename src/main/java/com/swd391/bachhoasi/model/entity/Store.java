@@ -34,7 +34,7 @@ public class Store {
     private Integer point;
     @Column(name = "Status")
     private Boolean status;
-    @Column(name = "Location")
+    @Column(name = "Location", columnDefinition = "text")
     private String location;
     @ManyToOne(targetEntity = StoreLevel.class, optional = false)
     @JoinColumn(name = "StoreLevelId")

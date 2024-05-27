@@ -24,6 +24,6 @@ public class StoreType {
     private BigDecimal id;
     @Column(name = "Name")
     private String name;
-    @Column(name = "Description")
+    @Column(name = "Description", columnDefinition = "text")
     private String description;
 }
