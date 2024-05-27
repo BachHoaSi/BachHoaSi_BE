@@ -22,6 +22,8 @@ public class StoreLevel {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "Id")
     private BigDecimal id;
+    @Column(name = "Description")
+    private String description;
     @Column(name = "Level")
     private Integer level;
     @Column(name = "FromPoint")

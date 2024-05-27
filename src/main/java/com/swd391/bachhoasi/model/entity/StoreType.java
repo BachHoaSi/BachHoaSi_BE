@@ -24,4 +24,6 @@ public class StoreType {
     private BigDecimal id;
     @Column(name = "Name")
     private String name;
+    @Column(name = "Description")
+    private String description;
 }
