@@ -21,8 +21,6 @@ public class PaginationResponse <T> {
     private Integer totalPage;
     private Boolean isLastPage;
     private Boolean isFirstPage;
-    private Boolean isSuccess;
-    private String message;
 
 
     public PaginationResponse(Page<T> page){

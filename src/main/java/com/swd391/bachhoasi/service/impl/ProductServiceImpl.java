@@ -11,6 +11,7 @@ import com.swd391.bachhoasi.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,10 +32,7 @@ public class ProductServiceImpl implements ProductService {
     private final SecureRandom RANDOM = new SecureRandom();
 
     @Override
-    public PaginationResponse<ProductResponse> getProducts(int pageNumber, int pageSize, String search, BigDecimal categoryId, String sort, String direction) {
-        Sort.Direction sortDirection = (direction != null && direction.equalsIgnoreCase("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
-        Sort sortParameters = (sort != null) ? Sort.by(sortDirection, sort) : Sort.unsorted();
-        PageRequest pageable = PageRequest.of(pageNumber, pageSize, sortParameters);
+    public PaginationResponse<ProductResponse> getProducts(Pageable pageable, String search, BigDecimal categoryId) {
         if(categoryId == null || categoryId.equals(BigDecimal.ZERO)){
             Page<Product> products = productRepository.findByNameContainingIgnoreCase(search, pageable);
             return new PaginationResponse<>(products.map(this::mapToProductResponse));

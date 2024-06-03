@@ -4,10 +4,10 @@ import com.swd391.bachhoasi.model.dto.request.LoginDto;
 import com.swd391.bachhoasi.model.dto.response.LoginResponse;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.service.AuthService;
+import com.swd391.bachhoasi.util.AuthUtils;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +34,7 @@ public class AuthController {
             .data(jwtAuthResponse)
             .build();
         return ResponseEntity.ok()
-            .headers(jwtAuthResponse.getAuthenticationHeader())
+            .headers(AuthUtils.getAuthenticationHeader(jwtAuthResponse))
             .body(responseObject);
     }
 
