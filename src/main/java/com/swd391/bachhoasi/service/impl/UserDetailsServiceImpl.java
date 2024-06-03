@@ -1,6 +1,7 @@
 package com.swd391.bachhoasi.service.impl;
 
 import com.swd391.bachhoasi.model.entity.Admin;
+import com.swd391.bachhoasi.model.exception.AuthFailedException;
 import com.swd391.bachhoasi.model.exception.UserNotFoundException;
 import com.swd391.bachhoasi.repository.AdminRepository;
 import lombok.AllArgsConstructor;
@@ -22,13 +23,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        Admin admin = adminRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        Admin admin = adminRepository.findByUsername(username).orElseThrow(() -> new AuthFailedException("Wrong username, please check again !!!"));
         return new User(admin.getUsername(), admin.getHashPassword(), rolesToAuthority(admin));
     }
 
     private Collection<GrantedAuthority> rolesToAuthority(Admin user) {
         return Collections.singletonList(
-            new SimpleGrantedAuthority(user.getRole().name())
+            new SimpleGrantedAuthority(String.format("ROLE_%s", user.getRole().name()))
         );
     }
 }

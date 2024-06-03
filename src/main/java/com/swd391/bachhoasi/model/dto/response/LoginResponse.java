@@ -1,11 +1,7 @@
 package com.swd391.bachhoasi.model.dto.response;
 
-import org.apache.commons.lang3.CharSetUtils;
-import org.springframework.http.HttpHeaders;
-
 import com.swd391.bachhoasi.model.constant.Role;
 import com.swd391.bachhoasi.model.constant.TokenType;
-import com.swd391.bachhoasi.util.TextUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,9 +24,4 @@ public class LoginResponse {
         this.tokenType = TokenType.BEARER;
     }
 
-    public HttpHeaders getAuthenticationHeader(){
-        var header =  new HttpHeaders();
-        header.add("Authorization", String.format("%s %s", TextUtils.toCamelCase(tokenType.toString(), true) , accessToken));
-        return header;
-    }
 }

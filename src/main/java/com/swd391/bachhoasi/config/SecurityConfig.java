@@ -1,7 +1,6 @@
 package com.swd391.bachhoasi.config;
 
 import com.swd391.bachhoasi.security.JwtAuthenticationFilter;
-import com.swd391.bachhoasi.security.UserAuthenticationEntryPoint;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,16 +21,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserAuthenticationEntryPoint userAuthenticationEntryPoint;
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(
-                        exceptionHandling -> exceptionHandling.authenticationEntryPoint(userAuthenticationEntryPoint))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()

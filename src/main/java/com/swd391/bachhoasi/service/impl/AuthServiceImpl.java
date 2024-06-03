@@ -4,6 +4,7 @@ import com.swd391.bachhoasi.model.constant.Role;
 import com.swd391.bachhoasi.model.dto.request.LoginDto;
 import com.swd391.bachhoasi.model.dto.response.LoginResponse;
 import com.swd391.bachhoasi.model.entity.Admin;
+import com.swd391.bachhoasi.model.exception.AuthFailedException;
 import com.swd391.bachhoasi.model.exception.UserNotFoundException;
 import com.swd391.bachhoasi.repository.AdminRepository;
 import com.swd391.bachhoasi.security.JwtProvider;
@@ -31,10 +32,10 @@ public class AuthServiceImpl implements AuthService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String accessToken = jwtProvider.generateToken(authentication);
             Admin user = adminRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
-            .orElseThrow(UserNotFoundException::new);
+            .orElseThrow();
             return new LoginResponse(accessToken, "", user.getRole());
         }catch (Exception e){
-            throw new RuntimeException(e.getMessage());
+            throw new AuthFailedException("Username or password is not correct, please check again");
         }
     }
 }

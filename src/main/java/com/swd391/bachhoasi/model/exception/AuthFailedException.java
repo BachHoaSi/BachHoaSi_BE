@@ -4,16 +4,16 @@ import org.springframework.http.HttpStatus;
 
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 
-public class UserNotFoundException extends BachHoaSiBaseException {
+public class AuthFailedException extends BachHoaSiBaseException{
 
-    protected UserNotFoundException(String message) {
+    public AuthFailedException(String message) {
         super(message);
         this.errorResponse = ResponseObject.builder()
-        .code("USER-NOT-FOUND")
+        .code("AUTH-FAILED")
         .data(null)
         .message(message)
         .isSuccess(false)
-        .status(HttpStatus.OK)
+        .status(HttpStatus.UNAUTHORIZED)
         .build();
     }
 }

@@ -4,12 +4,16 @@ import com.swd391.bachhoasi.model.dto.request.ProductRequest;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ProductResponse;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
-import com.swd391.bachhoasi.model.entity.Product;
 import com.swd391.bachhoasi.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -19,17 +23,14 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class ProductController {
 
-
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<ResponseObject> getProducts(@RequestParam(value = "page", defaultValue = "0") int pageNumber,
-                                                      @RequestParam(value = "size", defaultValue = "10") int pageSize,
+    @PreAuthorize("hasRole('ADMIN','MANAGER')")
+    public ResponseEntity<ResponseObject> getProducts(@PageableDefault(page = 0, size = 20, sort = "productCode", direction = Direction.DESC) Pageable pagination,
                                                       @RequestParam(value = "search", defaultValue = "") String search,
-                                                      @RequestParam(value = "category", defaultValue = "") BigDecimal categoryId,
-                                                      @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                      @RequestParam(value = "direction", defaultValue = "asc") String direction){
-        PaginationResponse<ProductResponse> products = productService.getProducts(pageNumber, pageSize, search, categoryId, sort, direction);
+                                                      @RequestParam(value = "category", defaultValue = "") BigDecimal categoryId){
+        PaginationResponse<ProductResponse> products = productService.getProducts(pagination, search, categoryId);
         var responseObject = ResponseObject.builder()
             .code("PRODUCT_GET_SUCCESS")
             .message("Get products successfully")
@@ -41,6 +42,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> addNewProduct(@RequestBody @Valid ProductRequest product){
         try{
             ProductResponse productResponse = productService.addNewProduct(product);
@@ -64,6 +66,7 @@ public class ProductController {
 
     }
     @DeleteMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> deleteProduct(@RequestParam("code") String code){
         try{
             productService.deleteProduct(code);
@@ -85,6 +88,7 @@ public class ProductController {
         }
     }
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> updateProduct(@RequestBody @Valid ProductRequest product, @RequestParam("code") String code){
         try{
             ProductResponse productResponse = productService.updateProduct(product, code);
@@ -103,7 +107,7 @@ public class ProductController {
                     .status(HttpStatus.BAD_REQUEST)
                     .isSuccess(false)
                     .build();
-            return ResponseEntity.ok().body(responseObject);
+            return ResponseEntity.ok(responseObject);
         }
     }
 
