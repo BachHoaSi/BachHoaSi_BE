@@ -5,6 +5,7 @@ import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ProductResponse;
 import com.swd391.bachhoasi.model.entity.Category;
 import com.swd391.bachhoasi.model.entity.Product;
+import com.swd391.bachhoasi.model.exception.NotFoundException;
 import com.swd391.bachhoasi.repository.CategoryRepository;
 import com.swd391.bachhoasi.repository.ProductRepository;
 import com.swd391.bachhoasi.service.ProductService;
@@ -65,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(String code) {
-        Product deleteProduct = productRepository.findByProductCode(code);
+        Product deleteProduct = productRepository.findByProductCode(code).orElseThrow(() -> new NotFoundException(String.format("Not found product with code: %s", code)));
         if(deleteProduct == null){
             throw new IllegalArgumentException("Product not found");
         }else {
@@ -79,10 +80,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse updateProduct(ProductRequest request, String code) {
-        Product product = productRepository.findByProductCode(code);
-        if(product == null){
-            throw new IllegalArgumentException("Product not found");
-        }
+        Product product = productRepository.findByProductCode(code).orElseThrow(() -> new NotFoundException(String.format("Not found product with code: %s", code)));
         Field[] fields = ProductRequest.class.getDeclaredFields();
         for(Field field : fields){
             try{
