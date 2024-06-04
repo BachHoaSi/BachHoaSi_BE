@@ -6,11 +6,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, BigDecimal> {
 
     Page<Product> findByCategoryIdAndNameContainingIgnoreCase(BigDecimal categoryId, String search, Pageable pageable);
     Page<Product> findByNameContainingIgnoreCase(String search, Pageable pageable);
-    Product findByProductCode(String code);
+    Optional<Product> findByProductCode(String code);
 
 }

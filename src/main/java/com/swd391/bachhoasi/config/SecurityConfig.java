@@ -1,9 +1,11 @@
 package com.swd391.bachhoasi.config;
 
+import com.swd391.bachhoasi.security.BachHoaSiAuthenticationEntryPoint;
 import com.swd391.bachhoasi.security.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -22,10 +24,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Qualifier("bachHoaSiAuthenticationEntryPoint")
+    private final BachHoaSiAuthenticationEntryPoint bachHoaSiAuthenticationEntryPoint;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable)
+        .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(bachHoaSiAuthenticationEntryPoint))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
