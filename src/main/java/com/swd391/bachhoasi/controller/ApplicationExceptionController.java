@@ -28,13 +28,25 @@ public class ApplicationExceptionController {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ResponseObject> authFailedException(AccessDeniedException exception) {
+    public ResponseEntity<ResponseObject> accessDeniedException(AccessDeniedException exception) {
         var responseError = ResponseObject.builder()
         .isSuccess(false)
         .message(exception.getMessage())
         .code("AUTH_FAILED")
         .data(null)
         .status(HttpStatus.FORBIDDEN)
+        .build();
+        return ResponseEntity.status(responseError.status()).body(responseError);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ResponseObject> authenticationFailedException(AuthenticationException exception) {
+        var responseError = ResponseObject.builder()
+        .isSuccess(false)
+        .message(exception.getMessage())
+        .code("AUTH_FAILED")
+        .data(null)
+        .status(HttpStatus.UNAUTHORIZED)
         .build();
         return ResponseEntity.status(responseError.status()).body(responseError);
     }

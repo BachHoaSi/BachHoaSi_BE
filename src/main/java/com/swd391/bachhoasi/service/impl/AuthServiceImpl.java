@@ -1,11 +1,9 @@
 package com.swd391.bachhoasi.service.impl;
 
-import com.swd391.bachhoasi.model.constant.Role;
 import com.swd391.bachhoasi.model.dto.request.LoginDto;
 import com.swd391.bachhoasi.model.dto.response.LoginResponse;
 import com.swd391.bachhoasi.model.entity.Admin;
 import com.swd391.bachhoasi.model.exception.AuthFailedException;
-import com.swd391.bachhoasi.model.exception.UserNotFoundException;
 import com.swd391.bachhoasi.repository.AdminRepository;
 import com.swd391.bachhoasi.security.JwtProvider;
 import com.swd391.bachhoasi.service.AuthService;
