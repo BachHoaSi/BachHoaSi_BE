@@ -34,4 +34,8 @@ public class Admin {
     @Column(name = "Role", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Role role;
+    @Column(name = "IsActive",nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isActive;
+    @Column(name = "IsLocked",nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isLocked;
 }

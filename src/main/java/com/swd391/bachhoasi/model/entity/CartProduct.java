@@ -33,4 +33,6 @@ public class CartProduct {
     private Product product;
     @Column(name = "Quantity")
     private Integer quantity;
+    @Column(name = "Status", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean status;
 }

@@ -70,4 +70,8 @@ public class Shipper {
     private Date updatedDate;
     @OneToMany(targetEntity = Order.class, mappedBy = "shipper", fetch = FetchType.LAZY)
     private List<Order> orderShip;
+    @Column(name = "IsActive",nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isActive;
+    @Column(name = "IsLocked",nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isLocked;
 }

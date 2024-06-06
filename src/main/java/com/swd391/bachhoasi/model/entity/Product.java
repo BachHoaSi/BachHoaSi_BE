@@ -49,4 +49,6 @@ public class Product {
     @ManyToOne(targetEntity = Category.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "CategoryId")
     private Category category;
+    @Column(name = "Status", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean status;
 }
