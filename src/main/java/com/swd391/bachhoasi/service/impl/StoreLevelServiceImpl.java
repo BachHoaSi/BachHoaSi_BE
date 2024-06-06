@@ -49,7 +49,7 @@ public class StoreLevelServiceImpl implements StoreLevelService {
     }
 
     public StoreLevelResponse createNewStoreLevel(StoreLevelRequest storeLevelRequest) {
-        if(storeLevelRequest == null) throw new ValidationFailedException("");
+        if(storeLevelRequest == null) throw new ValidationFailedException("Store level request is null, please check again !!!");
         var storeLevelEntity = StoreLevel.builder()
         .description(storeLevelRequest.getDescription())
         .level(storeLevelRequest.getLevel())
@@ -74,7 +74,7 @@ public class StoreLevelServiceImpl implements StoreLevelService {
 
     public StoreLevelResponse removeStoreLevelById(BigDecimal id) {
         if(id.intValue() < 0) 
-            throw new ValidationFailedException("");
+            throw new ValidationFailedException("Store level id isn't valid, please check again !!!");
         StoreLevel deletedObject = storeLevelRepository.findById(id).orElseThrow(
             () -> new NotFoundException(String.format("Not found store level with id: %s", id.toString()))
         );
