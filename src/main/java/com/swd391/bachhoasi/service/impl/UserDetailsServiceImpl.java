@@ -2,7 +2,6 @@ package com.swd391.bachhoasi.service.impl;
 
 import com.swd391.bachhoasi.model.entity.Admin;
 import com.swd391.bachhoasi.model.exception.AuthFailedException;
-import com.swd391.bachhoasi.model.exception.UserNotFoundException;
 import com.swd391.bachhoasi.repository.AdminRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
