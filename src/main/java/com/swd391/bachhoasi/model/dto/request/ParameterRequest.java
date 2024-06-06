@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.swd391.bachhoasi.util.TextUtils;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ParameterRequest {
@@ -18,5 +20,9 @@ public class ParameterRequest {
     public List<String> getParameters() {
         if(parameters == null) return Collections.emptyList();
         return new ArrayList<>(parameters.keySet());
+    }
+
+    public Map<String,String> getAllParameter() {
+        return TextUtils.convertKeysToCamel(parameters);
     }
 }

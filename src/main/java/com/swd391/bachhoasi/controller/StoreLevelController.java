@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -36,9 +37,9 @@ public class StoreLevelController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> getAll(
         @PageableDefault(page = 0, size = 20, sort = "id", direction = Direction.DESC) Pageable pagination,
-        @RequestParam(name = "getAll", required = false, defaultValue = "false") Boolean getAll
+        @RequestParam(required = false) Map<String,String> parameters
     ) {
-        var result = storeLevelService.getStoreLevelList(pagination, getAll);
+        var result = storeLevelService.getStoreLevelList(pagination, parameters);
         return ResponseEntity.ok(
             ResponseObject.builder()
             .code("STORE_LEVEL_GET_SUCCESS")

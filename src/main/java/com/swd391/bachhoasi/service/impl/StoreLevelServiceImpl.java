@@ -1,7 +1,8 @@
 package com.swd391.bachhoasi.service.impl;
 
 import java.math.BigDecimal;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import com.swd391.bachhoasi.model.exception.NotFoundException;
 import com.swd391.bachhoasi.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi.repository.StoreLevelRepository;
 import com.swd391.bachhoasi.service.StoreLevelService;
+import com.swd391.bachhoasi.util.TextUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,26 +27,20 @@ import lombok.RequiredArgsConstructor;
 public class StoreLevelServiceImpl implements StoreLevelService {
     private final StoreLevelRepository storeLevelRepository;
 
-    public PaginationResponse<StoreLevelResponse> getStoreLevelList(Pageable pageable, boolean getAll) {
-        if (getAll) {
-            Collection<StoreLevelResponse> collection = storeLevelRepository.findAll().stream()
-                    .map(item -> StoreLevelResponse.builder()
-                            .id(item.getId())
-                            .level(item.getLevel())
-                            .fromPoint(item.getFromPoint())
-                            .toPoint(item.getToPoint())
-                            .build())
-                    .toList();
-            return new PaginationResponse<>(collection);
-        } else {
-            Page<StoreLevelResponse> storeLevelPage = storeLevelRepository.findAll(pageable)
-                    .map(item -> StoreLevelResponse.builder()
-                            .id(item.getId())
-                            .level(item.getLevel())
-                            .fromPoint(item.getFromPoint())
-                            .toPoint(item.getToPoint())
-                            .build());
+    public PaginationResponse<StoreLevelResponse> getStoreLevelList(Pageable pageable, Map<String, String> parameter) {
+        if(parameter == null) parameter = new HashMap<>();
+        var parameterList = TextUtils.convertKeysToCamel(parameter);
+        try {
+            Page<StoreLevelResponse> storeLevelPage = storeLevelRepository.searchStoreLevelByParameter(parameterList, pageable)
+            .map(item -> StoreLevelResponse.builder()
+            .id(item.getId())
+            .level(item.getLevel())
+            .fromPoint(item.getFromPoint())
+            .toPoint(item.getToPoint())
+            .build());
             return new PaginationResponse<>(storeLevelPage);
+        } catch (Exception ex ) {
+            throw new ActionFailedException(ex.getMessage(), "STORE_LEVEL_GET_FAILED");
         }
     }
 
