@@ -30,4 +30,6 @@ public class StoreLevel {
     private Double fromPoint;
     @Column(name = "ToPoint")
     private Double toPoint;
+    @Column(name = "Status", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean status;
 }

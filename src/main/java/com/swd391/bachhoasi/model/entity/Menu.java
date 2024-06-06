@@ -35,7 +35,7 @@ public class Menu {
     private StoreLevel storeLevel;
     @ManyToOne(targetEntity = StoreType.class, optional = false)
     private StoreType storeType;
-    @Column(name = "Status")
+    @Column(name = "Status", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status;
     @CreationTimestamp(source = SourceType.DB)
     private Date createdDate;

@@ -32,7 +32,7 @@ public class Store {
     private StoreType type;
     @Column(name = "Point")
     private Integer point;
-    @Column(name = "Status")
+    @Column(name = "Status", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status;
     @Column(name = "Location", columnDefinition = "text")
     private String location;

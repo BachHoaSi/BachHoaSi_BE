@@ -40,4 +40,6 @@ public class Category {
     @ManyToOne(targetEntity = Admin.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "UpdatedBy", nullable = true)
     private Admin updatedBy;
+    @Column(name = "Status", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean status;
 }

@@ -26,4 +26,6 @@ public class StoreType {
     private String name;
     @Column(name = "Description", columnDefinition = "text")
     private String description;
+    @Column(name = "Status", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean status;
 }
