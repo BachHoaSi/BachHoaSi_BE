@@ -4,10 +4,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.swd391.bachhoasi.model.dto.request.StoreLevelRequest;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.service.StoreLevelService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.math.BigDecimal;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -15,11 +19,15 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/store-level")
+@RequestMapping("/store-levels")
 @RequiredArgsConstructor
 public class StoreLevelController {
 
@@ -41,5 +49,32 @@ public class StoreLevelController {
             .build()
         );
     }
-    
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseObject> createStoreLevel(@RequestBody @Valid StoreLevelRequest storeLevel) {
+        var result = storeLevelService.createNewStoreLevel(storeLevel);
+        return ResponseEntity.ok(
+            ResponseObject.builder()
+            .code("STORE_LEVEL_CREATE_SUCCESS")
+            .isSuccess(true)
+            .data(result)
+            .message("Create store level success")
+            .status(HttpStatus.OK)
+            .build()
+        );
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseObject> removeStoreLevel(@PathVariable(name = "id") BigDecimal id) {
+        var result = storeLevelService.removeStoreLevelById(id);
+        return ResponseEntity.ok(
+            ResponseObject.builder()
+            .code("STORE_LEVEL_REMOVE_SUCCESS")
+            .isSuccess(true)
+            .status(HttpStatus.OK)
+            .data(result)
+            .message("Remove store level success")
+            .build()
+        );
+    }
 }
