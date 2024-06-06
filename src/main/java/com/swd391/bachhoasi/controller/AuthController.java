@@ -1,6 +1,7 @@
 package com.swd391.bachhoasi.controller;
 
 import com.swd391.bachhoasi.model.dto.request.LoginDto;
+import com.swd391.bachhoasi.model.dto.request.RefreshTokenRequest;
 import com.swd391.bachhoasi.model.dto.response.LoginResponse;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.service.AuthService;
@@ -37,5 +38,21 @@ public class AuthController {
             .headers(AuthUtils.getAuthenticationHeader(jwtAuthResponse))
             .body(responseObject);
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<ResponseObject> refreshAccessToken(@RequestBody RefreshTokenRequest refreshToken) {
+        LoginResponse jwtAuthResponse = authService.createAccessToken(refreshToken.getRefreshToken());
+        var responseObject = ResponseObject.builder()
+            .code("REFRESH_SUCCESS")
+            .message("Welcome To Bach Hoa Si")
+            .status(HttpStatus.OK)
+            .isSuccess(true)
+            .data(jwtAuthResponse)
+            .build();
+        return ResponseEntity.ok()
+            .headers(AuthUtils.getAuthenticationHeader(jwtAuthResponse))
+            .body(responseObject);
+    }
+    
 
 }
