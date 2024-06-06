@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> getProducts(@PageableDefault(page = 0, size = 20, sort = "productCode", direction = Direction.DESC) Pageable pagination,
                                                       @RequestParam(value = "search", defaultValue = "") String search,
                                                       @RequestParam(value = "category", defaultValue = "") BigDecimal categoryId){
@@ -61,7 +61,7 @@ public class ProductController {
                    .status(HttpStatus.BAD_REQUEST)
                    .isSuccess(false)
                    .build();
-           return ResponseEntity.ok().body(responseObject);
+           return ResponseEntity.ok(responseObject);
         }
 
     }
@@ -110,6 +110,4 @@ public class ProductController {
             return ResponseEntity.ok(responseObject);
         }
     }
-
-
 }

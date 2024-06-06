@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.service.impl;
 
+import com.swd391.bachhoasi.model.constant.TokenType;
 import com.swd391.bachhoasi.model.dto.request.LoginDto;
 import com.swd391.bachhoasi.model.dto.response.LoginResponse;
 import com.swd391.bachhoasi.model.entity.Admin;
@@ -28,12 +29,25 @@ public class AuthServiceImpl implements AuthService {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String accessToken = jwtProvider.generateToken(authentication);
+            String accessToken = jwtProvider.generateToken(authentication, TokenType.ACCESS_TOKEN);
+            String refreshToken = jwtProvider.generateRefreshToken(authentication);
             Admin user = adminRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
             .orElseThrow();
-            return new LoginResponse(accessToken, "", user.getRole());
+            return new LoginResponse(accessToken, refreshToken, user.getRole());
         }catch (Exception e){
             throw new AuthFailedException("Username or password is not correct, please check again");
+        }
+    }
+
+    public LoginResponse createAccessToken(String refreshToken) {
+        try {
+            String username = jwtProvider.getUsernameFromJWT(refreshToken, TokenType.REFRESH_TOKEN);
+            String accessToken = jwtProvider.generateToken(username, TokenType.ACCESS_TOKEN);
+            Admin user = adminRepository.findByUsername(username)
+            .orElseThrow();
+            return new LoginResponse(accessToken, refreshToken, user.getRole());
+        }catch (Exception e){
+            throw new AuthFailedException("Refresh token isn't valid, please try again");
         }
     }
 }
