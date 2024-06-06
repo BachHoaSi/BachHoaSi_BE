@@ -41,8 +41,6 @@ public class Cart {
     private Date createdDate;
     @Column(name = "UpdatedDate")
     private Date updatedDate;
-    @Column(name = "Status", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean status;
     @OneToMany(targetEntity = CartProduct.class,mappedBy = "cart", fetch = FetchType.EAGER)
     private List<CartProduct> cartProducts;
 }

@@ -74,6 +74,4 @@ public class Order {
     @ManyToOne(targetEntity = Shipper.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "ShipperId",referencedColumnName = "id", columnDefinition = "bigint")
     private Shipper shipper;
-    @Column(name = "Status", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean status;
 }
