@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface StoreTypeService {
     StoreTypeResponse createNewStoreType(StoreTypeRequest storeTypeRequest);
-    StoreTypeResponse updateStoreType(BigDecimal id, String name, String description, Boolean status);
+    void updateStoreType(BigDecimal id, String name, String description);
     Optional<StoreType> findById(BigDecimal id);
     PaginationResponse<StoreType> getStoreTypes(Pageable pagination, String keyword);
     StoreTypeResponse deleteStoreTypeById(BigDecimal id);

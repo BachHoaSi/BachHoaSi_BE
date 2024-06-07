@@ -12,6 +12,4 @@ public class StoreTypeResponse {
     private String name;
     private String description;
     private BigDecimal id;
-    private Boolean status;
-
 }

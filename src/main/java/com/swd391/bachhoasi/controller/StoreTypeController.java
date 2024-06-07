@@ -73,26 +73,27 @@ public class StoreTypeController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> updateStoreType(@RequestParam BigDecimal id,
                                                           @RequestParam String name,
-                                                          @RequestParam String description,
-                                                          @RequestParam Boolean status
-    ){
+                                                          @RequestParam String description){
         try {
-            storeTypeService.updateStoreType(id, name, description, status);
+            storeTypeService.updateStoreType(id, name, description);
             return ResponseEntity.ok().build();
         } catch (ValidationFailedException e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
 
-    @DeleteMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseObject> deleteStoreType(@RequestParam BigDecimal id
-    ){
-        try {
-            storeTypeService.deleteStoreTypeById(id);
-            return ResponseEntity.ok().build();
-        } catch (ValidationFailedException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseObject> deleteStoreType(@PathVariable(name = "id") BigDecimal id) {
+        var result = storeTypeService.deleteStoreTypeById(id);
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("STORE_TYPE_REMOVE_SUCCESS")
+                        .isSuccess(true)
+                        .status(HttpStatus.OK)
+                        .data(result)
+                        .message("Remove store type success")
+                        .build()
+        );
     }
 }
