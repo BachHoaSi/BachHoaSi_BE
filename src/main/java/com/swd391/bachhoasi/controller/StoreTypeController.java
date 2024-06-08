@@ -73,9 +73,11 @@ public class StoreTypeController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> updateStoreType(@RequestParam BigDecimal id,
                                                           @RequestParam String name,
-                                                          @RequestParam String description){
+                                                          @RequestParam String description,
+                                                          @RequestParam Boolean status
+    ){
         try {
-            storeTypeService.updateStoreType(id, name, description);
+            storeTypeService.updateStoreType(id, name, description, status);
             return ResponseEntity.ok().build();
         } catch (ValidationFailedException e) {
             return ResponseEntity.badRequest().body(null);
