@@ -65,22 +65,6 @@ public class StoreTypeServiceImpl implements StoreTypeService {
         }
     }
 
-    public void updateStoreType(BigDecimal id, String name, String description) {
-        if (id == null) {
-            throw new ValidationFailedException("Store type id request is null, please check again !!!");
-        }
-        try {
-            StoreType storeTypeEntity = storeTypeRepository.findById(id).orElseThrow(() ->
-                    new ValidationFailedException("Store type not found, please check again !!!"));
-            storeTypeEntity.setName(name);
-            storeTypeEntity.setDescription(description);
-
-            storeTypeRepository.save(storeTypeEntity);
-        }catch (Exception e) {
-            throw new ValidationFailedException("Cannot update storeType, please check again !!!");
-        }
-    }
-
     @Override
     public Optional<StoreType> findById(BigDecimal id) {
         if (id == null)
@@ -140,25 +124,4 @@ public class StoreTypeServiceImpl implements StoreTypeService {
             return storeType;
         });
     }
-
-    /*
-        if(id.intValue() < 0)
-            throw new ValidationFailedException("Store type id isn't valid, please check again !!!");
-        StoreType deletedObject = storeTypeRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Not found store type with id: %s", id.toString()))
-        );
-        try {
-            storeTypeRepository.delete(deletedObject);
-        }catch(Exception ex) {
-            throw new ActionFailedException("This store type is used by others, please remove them before this");
-        }
-
-        return StoreTypeResponse.builder()
-                .id(deletedObject.getId())
-                .name(deletedObject.getName())
-                .description(deletedObject.getDescription())
-                .build();
-    }*/
-
-
 }
