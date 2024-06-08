@@ -36,12 +36,35 @@ public class StoreTypeServiceImpl implements StoreTypeService {
         StoreType storeTypeEntity = StoreType.builder()
                 .name(storeTypeRequest.getName())
                 .description(storeTypeRequest.getDescription())
+                .status(storeTypeRequest.getStatus())
                 .build();
         StoreType result = storeTypeRepository.save(storeTypeEntity);
         return mapToStoreTypeRespone(result);
     }
 
     @Override
+    public StoreTypeResponse updateStoreType(BigDecimal id, String name, String description, Boolean status) {
+        if (id == null) {
+            throw new ValidationFailedException("Store type id request is null, please check again !!!");
+        }
+        Optional<StoreType> storeTypeOptional = storeTypeRepository.findById(id);
+        if (storeTypeOptional.isEmpty()) {
+            throw new ValidationFailedException("Store type not found, please check again !!!");
+        }
+
+        StoreType storeTypeEntity = storeTypeOptional.get();
+        storeTypeEntity.setName(name);
+        storeTypeEntity.setDescription(description);
+        storeTypeEntity.setStatus(status);
+
+        try {
+            StoreType updatedStoreType = storeTypeRepository.save(storeTypeEntity);
+            return mapToStoreTypeRespone(updatedStoreType);
+        } catch (Exception e) {
+            throw new ValidationFailedException("Cannot update storeType, please check again !!!");
+        }
+    }
+
     public void updateStoreType(BigDecimal id, String name, String description) {
         if (id == null) {
             throw new ValidationFailedException("Store type id request is null, please check again !!!");
@@ -56,8 +79,6 @@ public class StoreTypeServiceImpl implements StoreTypeService {
         }catch (Exception e) {
             throw new ValidationFailedException("Cannot update storeType, please check again !!!");
         }
-
-
     }
 
     @Override
@@ -69,18 +90,58 @@ public class StoreTypeServiceImpl implements StoreTypeService {
 
     @Override
     public PaginationResponse<StoreType> getStoreTypes(Pageable pageable, String keyword) {
-        if (keyword == null) {
-            Page<StoreType > p1 =  storeTypeRepository.findAll(pageable);
-            return new PaginationResponse<>(p1);
-        } else  {
-            Page<StoreType> p2 = storeTypeRepository.findByNameOrDescription(keyword, pageable)
-                    .map(item -> StoreType.builder().name(item.getName()).description(item.getDescription()).build());
-            return new PaginationResponse<>(p2);
-        }
+        Page<StoreTypeResponse> storeTypeResponsePage = storeTypeRepository.findByNameOrDescription(keyword, pageable)
+                .map(item -> StoreTypeResponse.builder()
+                        .id(item.getId())
+                        .name(item.getName())
+                        .description(item.getDescription())
+                        .status(item.getStatus())
+                        .build());
+
+        return new PaginationResponse<>(convert(storeTypeResponsePage));
+
     }
 
     @Override
     public StoreTypeResponse deleteStoreTypeById(BigDecimal id) {
+        if (id == null) {
+            throw new ValidationFailedException("Store type id request is null, please check again !!!");
+        }
+        Optional<StoreType> storeTypeOptional = storeTypeRepository.findById(id);
+        if (storeTypeOptional.isEmpty()) {
+            throw new ValidationFailedException("Store type not found, please check again !!!");
+        }
+
+        StoreType storeTypeEntity = storeTypeOptional.get();
+        storeTypeEntity.setStatus(false);
+
+        try {
+            StoreType deleteStoreType = storeTypeRepository.save(storeTypeEntity);
+            return mapToStoreTypeRespone(deleteStoreType);
+        } catch (Exception e) {
+            throw new ValidationFailedException("Cannot update storeType, please check again !!!");
+        }
+    }
+
+    public StoreTypeResponse mapToStoreTypeRespone(StoreType storeType) {
+        return StoreTypeResponse.builder()
+                .name(storeType.getName())
+                .description(storeType.getDescription())
+                .build();
+    }
+
+    public Page<StoreType> convert(Page<StoreTypeResponse> response) {
+        return response.map(storeTypeResponse -> {
+            StoreType storeType = new StoreType();
+            storeType.setId(storeTypeResponse.getId());
+            storeType.setName(storeTypeResponse.getName());
+            storeType.setDescription(storeTypeResponse.getDescription());
+            storeType.setStatus(storeTypeResponse.getStatus());
+            return storeType;
+        });
+    }
+
+    /*
         if(id.intValue() < 0)
             throw new ValidationFailedException("Store type id isn't valid, please check again !!!");
         StoreType deletedObject = storeTypeRepository.findById(id).orElseThrow(
@@ -97,13 +158,7 @@ public class StoreTypeServiceImpl implements StoreTypeService {
                 .name(deletedObject.getName())
                 .description(deletedObject.getDescription())
                 .build();
-    }
+    }*/
 
-    public StoreTypeResponse mapToStoreTypeRespone(StoreType storeType) {
-        return StoreTypeResponse.builder()
-                .name(storeType.getName())
-                .description(storeType.getDescription())
-                .build();
-    }
 
 }
