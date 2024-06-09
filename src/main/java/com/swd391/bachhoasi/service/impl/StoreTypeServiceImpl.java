@@ -4,6 +4,7 @@ import com.swd391.bachhoasi.model.dto.request.StoreTypeRequest;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.StoreLevelResponse;
 import com.swd391.bachhoasi.model.dto.response.StoreTypeResponse;
+import com.swd391.bachhoasi.model.entity.Store;
 import com.swd391.bachhoasi.model.entity.StoreLevel;
 import com.swd391.bachhoasi.model.entity.StoreType;
 import com.swd391.bachhoasi.model.exception.NotFoundException;
@@ -43,19 +44,19 @@ public class StoreTypeServiceImpl implements StoreTypeService {
     }
 
     @Override
-    public StoreTypeResponse updateStoreType(BigDecimal id, String name, String description, Boolean status) {
-        if (id == null) {
+    public StoreTypeResponse updateStoreType(StoreTypeRequest storeTypeRequest) {
+        if (storeTypeRequest == null) {
             throw new ValidationFailedException("Store type id request is null, please check again !!!");
         }
-        Optional<StoreType> storeTypeOptional = storeTypeRepository.findById(id);
+        Optional<StoreType> storeTypeOptional = storeTypeRepository.findById(storeTypeRequest.getId());
         if (storeTypeOptional.isEmpty()) {
             throw new ValidationFailedException("Store type not found, please check again !!!");
         }
 
         StoreType storeTypeEntity = storeTypeOptional.get();
-        storeTypeEntity.setName(name);
-        storeTypeEntity.setDescription(description);
-        storeTypeEntity.setStatus(status);
+        storeTypeEntity.setName(storeTypeRequest.getName());
+        storeTypeEntity.setDescription(storeTypeRequest.getDescription());
+        storeTypeEntity.setStatus(storeTypeRequest.getStatus());
 
         try {
             StoreType updatedStoreType = storeTypeRepository.save(storeTypeEntity);

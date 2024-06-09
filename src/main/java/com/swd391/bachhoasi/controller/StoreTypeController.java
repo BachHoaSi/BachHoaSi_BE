@@ -48,40 +48,26 @@ public class StoreTypeController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> createNewStoreType(@RequestBody @Valid StoreTypeRequest storeType){
-        try{
-            StoreTypeResponse storeTypeResponse = storeTypeService.createNewStoreType(storeType);
-            var responseObject = ResponseObject.builder()
-                    .data(storeTypeResponse)
-                    .code("STORE_TYPE_ADD_SUCCESS")
-                    .message("Add store type successfully")
-                    .status(HttpStatus.OK)
-                    .isSuccess(true)
-                    .build();
-            return ResponseEntity.ok().body(responseObject);
-        }catch (Exception e){
-            var responseObject = ResponseObject.builder()
-                    .code("STORE_TYPE_ADD_FAILED")
-                    .message(e.getMessage())
-                    .status(HttpStatus.BAD_REQUEST)
-                    .isSuccess(false)
-                    .build();
-            return ResponseEntity.ok().body(responseObject);
-        }
+        var result = storeTypeService.createNewStoreType(storeType);
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("STORE_CREATE_CREATE_SUCCESS")
+                        .isSuccess(true)
+                        .data(result)
+                        .message("Create type level success")
+                        .status(HttpStatus.OK)
+                        .build()
+        );
     }
 
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseObject> updateStoreType(@RequestParam BigDecimal id,
-                                                          @RequestParam String name,
-                                                          @RequestParam String description,
-                                                          @RequestParam Boolean status
+    public ResponseEntity<ResponseObject> updateStoreType(@RequestBody @Valid StoreTypeRequest storeType
     ){
-        try {
-            storeTypeService.updateStoreType(id, name, description, status);
+
+            storeTypeService.updateStoreType(storeType);
             return ResponseEntity.ok().build();
-        } catch (ValidationFailedException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+
     }
 
     @PreAuthorize("hasRole('ADMIN')")
