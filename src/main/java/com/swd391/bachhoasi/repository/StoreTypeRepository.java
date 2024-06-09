@@ -13,10 +13,8 @@ import java.util.Optional;
 @Repository
 public interface StoreTypeRepository extends JpaRepository<StoreType, BigDecimal> {
     Page<StoreType> findByName(String name, Pageable pageable);
+    Optional<StoreType> findByName(String name);
     Page<StoreType> findByDescription(String description, Pageable pageable);
-        @Query("select s from StoreType s where s.name like %:keyword% and s.description like %:keyword%")
+        @Query("select s from StoreType s where s.name like %:keyword% or s.description like %:keyword%")
         Page<StoreType> findByNameOrDescription(String keyword, Pageable pageable);
-/*
-    Optional<StoreType> findById(BigDecimal id);
-*/
 }
