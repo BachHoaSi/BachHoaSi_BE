@@ -27,17 +27,14 @@ spring:
     profiles:
         active: ${PENV}
         
-aws:
-    access:
-        key:
-            id: ${AWS_ACCESS_ID}
-    s3:
-        region: ap-southeast-1
-        bucket:
-            name: ${BUCKET_NAME}
-    secret:
-        access:
-            key: ${AWS_SECRET_ACCESS_KEY}
+google:
+    credentials:
+        client-id: ${GG_CLIENT_ID}
+        client-email: ${GG_CLIENT_EMAIL}
+        private-key-id: ${GG_PRIVATE_KEY_ID}
+        private-key: ${GG_PRIVATE_KEY}
+    firebase:
+        bucket: ${BUCKET}
 server:
     servlet:
         context-path: /api/v1
