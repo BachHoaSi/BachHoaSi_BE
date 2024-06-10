@@ -14,5 +14,6 @@ public class StoreTypeRequest {
     private String name;
     @NotEmpty(message = "Description should not be null or empty")
     private String description;
+    private Boolean status;
 
 }
