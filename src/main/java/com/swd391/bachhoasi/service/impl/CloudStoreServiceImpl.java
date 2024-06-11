@@ -20,12 +20,11 @@ public class CloudStoreServiceImpl implements CloudStoreService {
     public String save (MultipartFile file) {
         try {
             Bucket bucket = StorageClient.getInstance().bucket();
-            String fileName = BaseUtils.generateFileName(file.getOriginalFilename());
+            String fileName = BaseUtils.generateFileName(file);
             Blob blob = bucket.create(fileName, file.getBytes() , file.getContentType());
             return blob.getMediaLink();
         } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new ActionFailedException("Failed Push File To FireStore");
+            throw new ActionFailedException(String.format("Failed Push File To FireStore: %s", ex.getMessage()));
         }
     }
 
