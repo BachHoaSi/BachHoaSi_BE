@@ -52,6 +52,7 @@ services:
       GG_CLIENT_EMAIL: ${GG_CLIENT_EMAIL}
       GG_PRIVATE_KEY_ID: ${GG_PRIVATE_KEY_ID}
       GG_PRIVATE_KEY: ${GG_PRIVATE_KEY}
+      BUCKET: ${BUCKET}
     networks:
       - bachhoasi-networks
 
