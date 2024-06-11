@@ -5,10 +5,12 @@ import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ProductResponse;
 import com.swd391.bachhoasi.model.entity.Category;
 import com.swd391.bachhoasi.model.entity.Product;
+import com.swd391.bachhoasi.model.exception.ActionFailedException;
 import com.swd391.bachhoasi.model.exception.NotFoundException;
 import com.swd391.bachhoasi.repository.CategoryRepository;
 import com.swd391.bachhoasi.repository.ProductRepository;
 import com.swd391.bachhoasi.service.ProductService;
+import com.swd391.bachhoasi.util.TextUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +20,10 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.sql.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -30,14 +35,29 @@ public class ProductServiceImpl implements ProductService {
     private final SecureRandom RANDOM = new SecureRandom();
 
     @Override
-    public PaginationResponse<ProductResponse> getProducts(Pageable pageable, String search, BigDecimal categoryId) {
-        if(categoryId == null || categoryId.equals(BigDecimal.ZERO)){
-            Page<Product> products = productRepository.findByNameContainingIgnoreCase(search, pageable);
-            return new PaginationResponse<>(products.map(this::mapToProductResponse));
+    public PaginationResponse<ProductResponse> getProducts(Pageable pageable, Map<String,String> parameters) {
+        var parameterList = TextUtils.convertKeysToCamel(parameters);
+        Map<String, String> searchParameters = parameterList.entrySet().stream()
+                .filter(entry -> !entry.getKey().equals("page") && !entry.getKey().equals("size")&& !entry.getKey().equals("sort"))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        try {
+            Page<ProductResponse> products = productRepository.searchStoreLevelByParameter(searchParameters, pageable)
+                    .map(item -> ProductResponse.builder()
+                            .productCode(item.getProductCode())
+                            .name(item.getName())
+                            .basePrice(item.getBasePrice())
+                            .urlImages(item.getUrlImages())
+                            .description(item.getDescription())
+                            .stockQuantity(item.getStockQuantity())
+                            .categoryName(item.getCategory().getName())
+                            .build());
+            return new PaginationResponse<>(products);
+        } catch (Exception ex ) {
+            throw new ActionFailedException(ex.getMessage(), "STORE_LEVEL_GET_FAILED");
         }
-        Page<Product> products = productRepository.findByCategoryIdAndNameContainingIgnoreCase(categoryId, search, pageable);
-        return new PaginationResponse<>(products.map(this::mapToProductResponse));
+
     }
+
 
 
     @Override
