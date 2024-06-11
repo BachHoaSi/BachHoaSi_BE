@@ -48,6 +48,11 @@ jobs:
       BASE_URL_API: ${{secrets.BASE_URL_API}}
       ORIGIN_ALLOWED: ${{secrets.ORIGIN_ALLOWED}}
 
+      GG_CLIENT_ID: ${{secrets.GG_CLIENT_ID}}
+      GG_CLIENT_EMAIL: ${{secrets.GG_CLIENT_EMAIL}}
+      GG_PRIVATE_KEY_ID: ${{secrets.GG_PRIVATE_KEY_ID}}
+      GG_PRIVATE_KEY: ${{secrets.GG_PRIVATE_KEY}}
+
       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
     steps:
     - name: Checkout Develop

@@ -1,16 +1,12 @@
 package com.swd391.bachhoasi.controller;
 
-import com.swd391.bachhoasi.model.dto.request.StoreLevelRequest;
 import com.swd391.bachhoasi.model.dto.request.StoreTypeRequest;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
-import com.swd391.bachhoasi.model.dto.response.ProductResponse;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
-import com.swd391.bachhoasi.model.dto.response.StoreTypeResponse;
 import com.swd391.bachhoasi.model.entity.StoreType;
-import com.swd391.bachhoasi.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi.service.StoreTypeService;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
