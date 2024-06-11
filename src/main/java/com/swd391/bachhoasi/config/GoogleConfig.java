@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 
@@ -27,7 +26,6 @@ public class GoogleConfig {
     @Value("${google.credentials.private-key}")
     private String privateKey;
     
-    @Bean
     public GoogleCredentials googleCloudCredentialConfig() throws IOException {
         privateKey = privateKey.replace("'", "").trim();
         return ServiceAccountCredentials.fromPkcs8(clientId, clientEmail, privateKey, privateId, null);
