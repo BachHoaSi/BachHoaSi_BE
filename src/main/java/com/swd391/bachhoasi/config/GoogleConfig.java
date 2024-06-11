@@ -14,7 +14,6 @@ import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 
-import lombok.RequiredArgsConstructor;
 
 
 @Configuration
