@@ -47,11 +47,8 @@ jobs:
       PORT: ${{secrets.PORT}}
       BASE_URL_API: ${{secrets.BASE_URL_API}}
       ORIGIN_ALLOWED: ${{secrets.ORIGIN_ALLOWED}}
-
-      GG_CLIENT_ID: ${{secrets.GG_CLIENT_ID}}
-      GG_CLIENT_EMAIL: ${{secrets.GG_CLIENT_EMAIL}}
-      GG_PRIVATE_KEY_ID: ${{secrets.GG_PRIVATE_KEY_ID}}
-      GG_PRIVATE_KEY: ${{secrets.GG_PRIVATE_KEY}}
+      GG_LOCAL_CREDENTIAL_PATH: ${{secrets.GG_CREDENTIAL_PATH}}
+      GG_CREDENTIAL_NAME: ${{secrets.GG_CREDENTIAL_NAME}}
       BUCKET: ${{secrets.BUCKET}}
 
       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
