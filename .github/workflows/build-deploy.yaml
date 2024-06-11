@@ -52,6 +52,7 @@ jobs:
       GG_CLIENT_EMAIL: ${{secrets.GG_CLIENT_EMAIL}}
       GG_PRIVATE_KEY_ID: ${{secrets.GG_PRIVATE_KEY_ID}}
       GG_PRIVATE_KEY: ${{secrets.GG_PRIVATE_KEY}}
+      BUCKET: ${{secrets.BUCKET}}
 
       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
     steps:
