@@ -29,10 +29,8 @@ spring:
         
 google:
     credentials:
-        client-id: ${GG_CLIENT_ID}
-        client-email: ${GG_CLIENT_EMAIL}
-        private-key-id: ${GG_PRIVATE_KEY_ID}
-        private-key: ${GG_PRIVATE_KEY}
+        path: ${GG_CREDENTIAL_PATH:}
+        config-name: ${GG_CREDENTIAL_NAME:bachhoasi.json}
     firebase:
         bucket: ${BUCKET}
 server:
