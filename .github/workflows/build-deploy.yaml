@@ -5,7 +5,7 @@ on:
 jobs:
   bach-hoa-si-api-build:
     name: Build source code to Docker image
-    runs-on: ubuntu-22.04 
+    runs-on: deploy
     steps:
       - name: Checkout Develop
         uses: actions/checkout@v3
@@ -21,6 +21,7 @@ jobs:
         with:
           context: .
           push: true
+          no-cache: true
           tags: ${{secrets.DOCKER_USERNAME}}/bach-hoa-si-api:latest
   
   staging-api-deploy:
