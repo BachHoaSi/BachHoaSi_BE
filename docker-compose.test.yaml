@@ -49,10 +49,10 @@ services:
       BASE_URL_API: ${BASE_URL_API}
       ORIGIN_ALLOWED: ${ORIGIN_ALLOWED}
       BUCKET: ${BUCKET}
-      GG_CREDENTIAL_PATH: /bachhoasi
+      GG_CREDENTIAL_PATH: /bachhoasi/key
       GG_CREDENTIAL_NAME: ${GG_CREDENTIAL_NAME}
     volumes:
-      - ${GG_LOCAL_CREDENTIAL_PATH}/${GG_CREDENTIAL_NAME}:/bachhoasi/${GG_CREDENTIAL_NAME}
+      - ${GG_LOCAL_CREDENTIAL_PATH}:/bachhoasi/key
     networks:
       - bachhoasi-networks
 
