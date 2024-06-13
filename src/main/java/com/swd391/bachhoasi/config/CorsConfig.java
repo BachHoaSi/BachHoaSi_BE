@@ -19,39 +19,58 @@ public class CorsConfig {
     private String allowOrigin;
     @Value("${server.port}")
     private String port;
+
     @Bean
-    public WebMvcConfigurer corsConfigure(){
+    public WebMvcConfigurer corsConfigure() {
         return new WebMvcConfigurer() {
             @SuppressWarnings("null")
             @Override
-             public void addCorsMappings(CorsRegistry corsRegistry){
+            public void addCorsMappings(CorsRegistry corsRegistry) {
                 corsRegistry.addMapping("/**")
-                .allowedOrigins(getCorsAllowed())
-                .allowCredentials(true)
-                .allowedHeaders("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "PATCH")
-                .exposedHeaders("*");
+                        .allowedOrigins(getCorsAllowed())
+                        .allowCredentials(true)
+                        .allowedHeaders("*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "PATCH")
+                        .exposedHeaders("*");
             }
         };
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-                CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(Arrays.asList(getCorsAllowed()));
-                configuration.setAllowedMethods(Arrays.asList("*"));
-                configuration.setAllowedHeaders(Arrays.asList("*"));
-                configuration.setAllowCredentials(true);
-                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                source.registerCorsConfiguration("/**", configuration);
-                return source;
-        }
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList(getCorsAllowed()));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "HEAD", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList(
+                "Accept",
+                "Access-Control-Allow-Headers",
+                "Access-Control-Allow-Methods",
+                "Access-Control-Allow-Origin",
+                "Authorization",
+                "Content-Type",
+                "Origin",
+                "X-Requested-With"));
+        configuration.setAllowCredentials(true);
+        configuration.setExposedHeaders(Arrays.asList(
+                "Accept",
+                "Access-Control-Allow-Headers",
+                "Access-Control-Allow-Methods",
+                "Access-Control-Allow-Origin",
+                "Authorization",
+                "Content-Type",
+                "Origin",
+                "X-Requested-With"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
-    private String[] getCorsAllowed(){
+    private String[] getCorsAllowed() {
         List<String> corsAllowOrigins = new ArrayList<>();
         corsAllowOrigins.add("http://localhost:3000");
         corsAllowOrigins.add("https://api.fams.college");
-        if(!allowOrigin.equals("null")) corsAllowOrigins.add(allowOrigin);
+        if (!allowOrigin.equals("null"))
+            corsAllowOrigins.add(allowOrigin);
         return corsAllowOrigins.toArray(new String[0]);
     }
 }
