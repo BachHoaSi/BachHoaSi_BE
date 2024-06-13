@@ -4,7 +4,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.request.StoreLevelRequest;
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto.SearchRequestParamsDtoBuilder;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.service.StoreLevelService;
 
@@ -37,9 +39,13 @@ public class StoreLevelController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> getAll(
         @PageableDefault(page = 0, size = 20, sort = "id", direction = Direction.DESC) Pageable pagination,
-        @RequestParam(required = false) Map<String,String> parameters
+        @RequestParam(required = false, name = "q") String query
     ) {
-        var result = storeLevelService.getStoreLevelList(pagination, parameters);
+        var queryDto = SearchRequestParamsDto.builder()
+            .search(query)
+            .wrapSort(pagination)
+            .build();
+        var result = storeLevelService.getStoreLevelList(queryDto.pagination(),queryDto.search());
         return ResponseEntity.ok(
             ResponseObject.builder()
             .code("STORE_LEVEL_GET_SUCCESS")

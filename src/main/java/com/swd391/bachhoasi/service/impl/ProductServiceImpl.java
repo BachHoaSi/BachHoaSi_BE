@@ -10,6 +10,7 @@ import com.swd391.bachhoasi.model.exception.NotFoundException;
 import com.swd391.bachhoasi.repository.CategoryRepository;
 import com.swd391.bachhoasi.repository.ProductRepository;
 import com.swd391.bachhoasi.service.ProductService;
+import com.swd391.bachhoasi.util.BaseUtils;
 import com.swd391.bachhoasi.util.TextUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,6 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.sql.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,10 +29,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    private ProductRepository productRepository;
-    private CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    private final SecureRandom RANDOM = new SecureRandom();
+    
 
     @Override
     public PaginationResponse<ProductResponse> getProducts(Pageable pageable, Map<String,String> parameters) {
@@ -43,6 +43,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             Page<ProductResponse> products = productRepository.searchStoreLevelByParameter(searchParameters, pageable)
                     .map(item -> ProductResponse.builder()
+                            .id(item.getId())
                             .productCode(item.getProductCode())
                             .name(item.getName())
                             .basePrice(item.getBasePrice())
@@ -58,8 +59,6 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
-
-
     @Override
     public ProductResponse addNewProduct(ProductRequest product) {
         Optional<Category> category = categoryRepository.findById(product.getCategoryId());
@@ -72,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
                 .description(product.getDescription())
                 .stockQuantity(product.getStockQuantity())
                 .urlImages(product.getUrlImages())
-                .productCode(generateProductCode())
+                .productCode(BaseUtils.generateProductCode())
                 .createdDate(new Date(System.currentTimeMillis()))
                 .lastImportDate(new Date(System.currentTimeMillis()))
                 .category(category.get())
@@ -129,20 +128,11 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private String generateProductCode() {
-        // Prefix
-        String prefix = "BHS";
-        // Generate a sequence of 10 random digits
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < 10; i++) {
-            int randomDigit = RANDOM.nextInt(10); // Generates a random digit between 0 and 9
-            stringBuilder.append(randomDigit);
-        }
-        return prefix + stringBuilder;
-    }
+    
 
     private ProductResponse mapToProductResponse(Product product) {
         return ProductResponse.builder()
+                .id(product.getId())
                 .productCode(product.getProductCode())
                 .name(product.getName())
                 .basePrice(product.getBasePrice())

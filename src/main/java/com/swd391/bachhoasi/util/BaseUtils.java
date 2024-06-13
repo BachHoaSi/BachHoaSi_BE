@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.util;
 
+import java.security.SecureRandom;
 import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -19,5 +20,18 @@ public class BaseUtils {
         }
         String finalOriginFileName = originFileName.substring(0,originFileName.lastIndexOf("."));
         return String.format("%s-%s",finalOriginFileName,UUID.randomUUID().toString());
+    }
+
+    public static String generateProductCode() {
+        // Prefix
+        String prefix = "BHS";
+        // Generate a sequence of 10 random digits
+        StringBuilder stringBuilder = new StringBuilder();
+        SecureRandom randomized = new SecureRandom();
+        for (int i = 0; i < 10; i++) {
+            int randomDigit = randomized.nextInt(10); // Generates a random digit between 0 and 9
+            stringBuilder.append(randomDigit);
+        }
+        return prefix + stringBuilder;
     }
 }

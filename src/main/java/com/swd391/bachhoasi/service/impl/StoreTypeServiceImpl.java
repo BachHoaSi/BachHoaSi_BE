@@ -2,27 +2,18 @@ package com.swd391.bachhoasi.service.impl;
 
 import com.swd391.bachhoasi.model.dto.request.StoreTypeRequest;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
-import com.swd391.bachhoasi.model.dto.response.StoreLevelResponse;
 import com.swd391.bachhoasi.model.dto.response.StoreTypeResponse;
-import com.swd391.bachhoasi.model.entity.Store;
-import com.swd391.bachhoasi.model.entity.StoreLevel;
 import com.swd391.bachhoasi.model.entity.StoreType;
-import com.swd391.bachhoasi.model.exception.NotFoundException;
 import com.swd391.bachhoasi.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi.repository.StoreTypeRepository;
 import com.swd391.bachhoasi.service.StoreTypeService;
-import jakarta.xml.bind.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.swd391.bachhoasi.model.exception.ActionFailedException;
 
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
