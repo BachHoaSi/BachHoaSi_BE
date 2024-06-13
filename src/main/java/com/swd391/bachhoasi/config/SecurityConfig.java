@@ -26,6 +26,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @Qualifier("bachHoaSiAuthenticationEntryPoint")
     private final BachHoaSiAuthenticationEntryPoint bachHoaSiAuthenticationEntryPoint;
+    private final CorsConfig corsConfig;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -38,7 +39,8 @@ public class SecurityConfig {
                         .authenticated())
                         //.permitAll())
                 .sessionManagement(
-                        sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()));
         http.addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> {
                     logout.logoutUrl("/auth/logout");
