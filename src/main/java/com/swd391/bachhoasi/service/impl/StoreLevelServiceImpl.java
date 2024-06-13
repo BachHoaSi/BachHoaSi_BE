@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StoreLevelServiceImpl implements StoreLevelService {
     private final StoreLevelRepository storeLevelRepository;
-
     public PaginationResponse<StoreLevelResponse> getStoreLevelList(Pageable pageable, Map<String, String> parameter) {
         if(parameter == null) parameter = new HashMap<>();
         var parameterList = TextUtils.convertKeysToCamel(parameter);

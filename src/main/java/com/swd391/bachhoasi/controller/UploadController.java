@@ -28,8 +28,8 @@ public class UploadController {
     public ResponseEntity<String> uploadFileTest(@RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok(cloudStoreService.save(file));
     }
-    @PostMapping("/products/:id")
-    public ResponseEntity<ResponseObject> uploadImage(@PathVariable() BigDecimal id, @RequestParam("file") MultipartFile file) {
+    @PostMapping("/products/{id}")
+    public ResponseEntity<ResponseObject> uploadImage(@PathVariable(value = "id") BigDecimal id, @RequestParam("file") MultipartFile file) {
         String url = uploadService.uploadProductImage(id, file);
         return ResponseEntity.ok(
             ResponseObject.builder()
