@@ -23,31 +23,34 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    @Qualifier("bachHoaSiAuthenticationEntryPoint")
-    private final BachHoaSiAuthenticationEntryPoint bachHoaSiAuthenticationEntryPoint;
-    private final CorsConfig corsConfig;
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        @Qualifier("bachHoaSiAuthenticationEntryPoint")
+        private final BachHoaSiAuthenticationEntryPoint bachHoaSiAuthenticationEntryPoint;
+        private final CorsConfig corsConfig;
 
-        http.csrf(AbstractHttpConfigurer::disable)
-        .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(bachHoaSiAuthenticationEntryPoint))
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .anyRequest()
-                        .authenticated())
-                        //.permitAll())
-                .sessionManagement(
-                        sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                        .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()));
-        http.addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(logout -> {
-                    logout.logoutUrl("/auth/logout");
-                    logout.logoutSuccessHandler(
-                            (request, response, authorization) -> SecurityContextHolder.clearContext());
-                });
-        return http.build();
-    }
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+                http.csrf(AbstractHttpConfigurer::disable)
+                                .exceptionHandling(bachHoaSiExceptionHandling -> bachHoaSiExceptionHandling
+                                                .authenticationEntryPoint(bachHoaSiAuthenticationEntryPoint))
+                                .authorizeHttpRequests(authorize -> authorize
+                                                .requestMatchers("/auth/**").permitAll()
+                                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                                .anyRequest()
+                                                .authenticated())
+                                .sessionManagement(
+                                                sessionManagement -> sessionManagement
+                                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()));
+                http.addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                                .logout(logout -> {
+                                        logout.logoutUrl("/auth/logout");
+                                        logout.logoutSuccessHandler(
+                                                        (request, response, authorization) -> SecurityContextHolder
+                                                                        .clearContext());
+                                });
+                return http.build();
+        }
 
 }
