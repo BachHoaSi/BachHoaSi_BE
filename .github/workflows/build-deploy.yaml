@@ -65,5 +65,6 @@ jobs:
       run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-api-test down bachhoasi-api
     - name: Clean Old BachHoaSi Image
       run: docker rmi ${{secrets.DOCKER_USERNAME}}/bach-hoa-si-api:latest 
+      continue-on-error: true
     - name: Deploy API
       run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-api-test up -d bachhoasi-api
