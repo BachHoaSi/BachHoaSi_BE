@@ -26,16 +26,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginDto loginDto) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String accessToken = jwtProvider.generateToken(authentication, TokenType.ACCESS_TOKEN);
+        String refreshToken = jwtProvider.generateRefreshToken(authentication);
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String accessToken = jwtProvider.generateToken(authentication, TokenType.ACCESS_TOKEN);
-            String refreshToken = jwtProvider.generateRefreshToken(authentication);
             Admin user = adminRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
             .orElseThrow();
             return new LoginResponse(accessToken, refreshToken, user.getRole());
         }catch (Exception e){
-            throw new AuthFailedException("Username or password is not correct, please check again");
+            throw new AuthFailedException("Your account may have been remove or disable during login");
         }
     }
 
