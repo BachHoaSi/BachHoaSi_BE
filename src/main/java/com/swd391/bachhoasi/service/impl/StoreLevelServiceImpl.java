@@ -30,7 +30,7 @@ public class StoreLevelServiceImpl implements StoreLevelService {
         if(parameter == null) parameter = new HashMap<>();
         var parameterList = TextUtils.convertKeysToCamel(parameter);
         try {
-            Page<StoreLevelResponse> storeLevelPage = storeLevelRepository.searchStoreLevelByParameter(parameterList, pageable)
+            Page<StoreLevelResponse> storeLevelPage = storeLevelRepository.searchAnyByParameter(parameterList, pageable)
             .map(item -> StoreLevelResponse.builder()
             .id(item.getId())
             .level(item.getLevel())

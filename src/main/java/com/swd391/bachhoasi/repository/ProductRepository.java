@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-public interface ProductRepository extends CustomRepository<Product,BigDecimal>{
+public interface ProductRepository extends BaseBachHoaSiRepository<Product,BigDecimal>{
 
 
     Page<Product> findByCategoryIdAndNameContainingIgnoreCase(BigDecimal categoryId, String search, Pageable pageable);

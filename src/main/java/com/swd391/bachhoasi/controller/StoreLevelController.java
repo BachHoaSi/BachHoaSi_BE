@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.request.StoreLevelRequest;
-import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto.SearchRequestParamsDtoBuilder;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.service.StoreLevelService;
 
@@ -14,7 +13,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
