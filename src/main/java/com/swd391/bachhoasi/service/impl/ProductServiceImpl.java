@@ -12,18 +12,14 @@ import com.swd391.bachhoasi.repository.CategoryRepository;
 import com.swd391.bachhoasi.repository.ProductRepository;
 import com.swd391.bachhoasi.service.ProductService;
 import com.swd391.bachhoasi.util.BaseUtils;
-import com.swd391.bachhoasi.util.TextUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
