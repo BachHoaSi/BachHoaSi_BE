@@ -1,18 +1,17 @@
 package com.swd391.bachhoasi.service;
 
 import com.swd391.bachhoasi.model.dto.request.ProductRequest;
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ProductResponse;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 
 @Service
 public interface ProductService {
 
-    PaginationResponse<ProductResponse> getProducts(Pageable pagination, Map<String,String> parameters);
+    PaginationResponse<ProductResponse> getProducts(SearchRequestParamsDto request);
 
     ProductResponse addNewProduct(ProductRequest request);
 

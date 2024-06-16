@@ -1,6 +1,7 @@
 package com.swd391.bachhoasi.service.impl;
 
 import com.swd391.bachhoasi.model.dto.request.ProductRequest;
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ProductResponse;
 import com.swd391.bachhoasi.model.entity.Category;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.security.SecureRandom;
 import java.sql.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -31,17 +31,10 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-
-    
-
     @Override
-    public PaginationResponse<ProductResponse> getProducts(Pageable pageable, Map<String,String> parameters) {
-        var parameterList = TextUtils.convertKeysToCamel(parameters);
-        Map<String, String> searchParameters = parameterList.entrySet().stream()
-                .filter(entry -> !entry.getKey().equals("page") && !entry.getKey().equals("size")&& !entry.getKey().equals("sort"))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    public PaginationResponse<ProductResponse> getProducts(SearchRequestParamsDto request) {
         try {
-            Page<ProductResponse> products = productRepository.searchStoreLevelByParameter(searchParameters, pageable)
+            Page<ProductResponse> products = productRepository.searchAnyByParameter(request.search(), request.pagination())
                     .map(item -> ProductResponse.builder()
                             .id(item.getId())
                             .productCode(item.getProductCode())

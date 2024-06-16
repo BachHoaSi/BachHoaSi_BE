@@ -59,7 +59,7 @@ public class SearchRequestParamsDto {
                             queryParams.put(parts[0], parts[1]);
                         }
                     }
-                    this.search = queryParams;
+                    this.search = TextUtils.convertKeysToCamel(queryParams);
                 } catch (Exception e) {
                     throw new ValidationFailedException("Query is not valid");
                 }

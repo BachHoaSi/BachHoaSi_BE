@@ -1,6 +1,7 @@
 package com.swd391.bachhoasi.controller;
 
 import com.swd391.bachhoasi.model.dto.request.ProductRequest;
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ProductResponse;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
@@ -16,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
@@ -29,9 +28,12 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> getProducts(
             @PageableDefault(page = 0, size = 20, sort = "id", direction = Direction.DESC) Pageable pagination,
-            @RequestParam(required = false) Map<String,String> parameters) {
-
-        PaginationResponse<ProductResponse> products = productService.getProducts(pagination, parameters);
+            @RequestParam(required = false, name = "q") String query) {
+        var queryDto = SearchRequestParamsDto.builder()
+        .search(query)
+        .pageable(pagination)
+        .build();
+        PaginationResponse<ProductResponse> products = productService.getProducts(queryDto);
         var responseObject = ResponseObject.builder()
                 .code("PRODUCT_GET_SUCCESS")
                 .message("Get products successfully")
