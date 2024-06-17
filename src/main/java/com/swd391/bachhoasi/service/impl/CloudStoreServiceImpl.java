@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.cloud.storage.Bucket;
 import com.google.firebase.cloud.StorageClient;
+import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.Blob;
 import com.swd391.bachhoasi.model.exception.ActionFailedException;
 import com.swd391.bachhoasi.model.exception.ValidationFailedException;
@@ -22,6 +23,7 @@ public class CloudStoreServiceImpl implements CloudStoreService {
             Bucket bucket = StorageClient.getInstance().bucket();
             String fileName = BaseUtils.generateFileName(file);
             Blob blob = bucket.create(fileName, file.getBytes() , file.getContentType());
+            blob.updateAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
             return blob.getMediaLink();
         } catch (Exception ex) {
             throw new ActionFailedException(String.format("Failed Push File To FireStore: %s", ex.getMessage()));
