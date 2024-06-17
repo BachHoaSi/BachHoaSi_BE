@@ -24,7 +24,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("search")
+    @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> getProducts(
             @PageableDefault(page = 0, size = 20, sort = "id", direction = Direction.DESC) Pageable pagination,
