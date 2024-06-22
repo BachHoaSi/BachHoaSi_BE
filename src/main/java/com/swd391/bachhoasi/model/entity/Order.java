@@ -1,6 +1,7 @@
 package com.swd391.bachhoasi.model.entity;
 
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
@@ -35,10 +36,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Order {
+public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id")
+    @Column(name = "Id", columnDefinition = "BIGSERIAL")
     private BigDecimal id;
     @Column(name = "SubTotal")
     private BigDecimal subTotal;
@@ -63,8 +64,8 @@ public class Order {
     private Admin admin;
     @OneToOne(targetEntity = OrderContact.class, optional = false, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private OrderContact orderContact;
-    @OneToMany(targetEntity = OrderProduct.class,mappedBy = "order" , cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
-    private List<OrderProduct> orderProducts;
+    @OneToMany(targetEntity = OrderProductMenu.class,mappedBy = "order" , cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    private List<OrderProductMenu> orderProducts;
     @CreationTimestamp(source = SourceType.DB)
     @Column(name = "CreatedDate", nullable = false)
     private Date createdDate;

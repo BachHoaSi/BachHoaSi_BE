@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.model.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
@@ -26,10 +27,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Cart")
-public class Cart {
+public class Cart implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id")
+    @Column(name = "Id", columnDefinition = "BIGSERIAL")
     private BigDecimal id;
     @OneToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "StoreId")
@@ -41,6 +42,6 @@ public class Cart {
     private Date createdDate;
     @Column(name = "UpdatedDate")
     private Date updatedDate;
-    @OneToMany(targetEntity = CartProduct.class,mappedBy = "cart", fetch = FetchType.EAGER)
-    private List<CartProduct> cartProducts;
+    @OneToMany(targetEntity = CartProductMenu.class,mappedBy = "cart", fetch = FetchType.EAGER)
+    private List<CartProductMenu> cartProducts;
 }
