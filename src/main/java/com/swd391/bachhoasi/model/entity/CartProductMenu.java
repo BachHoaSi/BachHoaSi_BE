@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.model.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
@@ -19,18 +20,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "CartProduct")
-public class CartProduct {
+@Entity(name = "CartProductMenu")
+public class CartProductMenu implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id")
+    @Column(name = "Id", columnDefinition = "BIGSERIAL")
     private BigDecimal id;
     @ManyToOne(targetEntity = Cart.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "CartId", referencedColumnName = "id", columnDefinition = "bigint")
     private Cart cart;
-    @ManyToOne(targetEntity = Product.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ProductId")
-    private Product product;
+    @ManyToOne(targetEntity = ProductMenu.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ProductId", referencedColumnName = "id")
+    private ProductMenu product;
     @Column(name = "Quantity")
     private Integer quantity;
     @Column(name = "Status", columnDefinition = "BOOLEAN DEFAULT TRUE")

@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.model.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
@@ -25,10 +26,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Menu")
-public class Menu {
+public class Menu implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id")
+    @Column(name = "Id", columnDefinition = "BIGSERIAL")
     private BigDecimal id;
     @ManyToOne(targetEntity = StoreLevel.class, optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "StoreLevelId")

@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.model.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
@@ -17,10 +18,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "StoreType")
-public class StoreType {
+public class StoreType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "ID")
+    @Column(name = "Id", columnDefinition = "BIGSERIAL")
     private BigDecimal id;
     @Column(name = "Name")
     private String name;

@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.model.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.swd391.bachhoasi.model.constant.Role;
@@ -20,10 +21,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Admin")
-public class Admin {
+public class Admin implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id")
+    @Column(name = "Id", columnDefinition = "BIGSERIAL")
     private BigDecimal id;
     @Column(name = "UserName", nullable = false, columnDefinition = "varchar", length = 32)
     private String username;

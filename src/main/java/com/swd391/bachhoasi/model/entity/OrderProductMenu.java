@@ -1,7 +1,9 @@
 package com.swd391.bachhoasi.model.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,18 +21,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "OrderProduct")
-public class OrderProduct {
+@Entity(name = "OrderProductMenu")
+public class OrderProductMenu implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id")
+    @Column(name = "Id", columnDefinition = "BIGSERIAL")
     private BigDecimal id;
     @ManyToOne(targetEntity = Order.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "OrderId", referencedColumnName = "id", columnDefinition = "bigint")
     private Order order;
     @Column(name = "Quantity")
     private Integer quantity;
-    @OneToOne(targetEntity = Product.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ProductId")
-    private Product product;
+    @OneToOne(targetEntity = ProductMenu.class, fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
+    @JoinColumn(name = "ProductMenuId", referencedColumnName = "id", nullable = false)
+    private ProductMenu product;
 }
