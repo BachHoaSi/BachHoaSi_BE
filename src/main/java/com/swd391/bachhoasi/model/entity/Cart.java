@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 public class Cart implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id", columnDefinition = "BIGSERIAL")
+    @Column(name = "Id", columnDefinition = "BIGINT")
     private BigDecimal id;
     @OneToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "StoreId")

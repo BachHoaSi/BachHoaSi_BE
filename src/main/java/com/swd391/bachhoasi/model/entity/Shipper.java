@@ -34,7 +34,7 @@ import lombok.NoArgsConstructor;
 public class Shipper implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id", columnDefinition = "BIGSERIAL")
+    @Column(name = "Id", columnDefinition = "BIGINT")
     private BigDecimal id;
     @Column(name = "Name", columnDefinition = "varchar", length = 48)
     private String name;

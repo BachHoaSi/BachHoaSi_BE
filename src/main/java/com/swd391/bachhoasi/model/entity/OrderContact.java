@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class OrderContact implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id", columnDefinition = "BIGSERIAL")
+    @Column(name = "Id", columnDefinition = "BIGINT")
     private BigDecimal id;
     @OneToOne(targetEntity = Order.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "OrderId")

@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class Admin implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id", columnDefinition = "BIGSERIAL")
+    @Column(name = "Id", columnDefinition = "BIGINT")
     private BigDecimal id;
     @Column(name = "UserName", nullable = false, columnDefinition = "varchar", length = 32)
     private String username;

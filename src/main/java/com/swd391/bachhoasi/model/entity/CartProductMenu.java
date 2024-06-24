@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class CartProductMenu implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id", columnDefinition = "BIGSERIAL")
+    @Column(name = "Id", columnDefinition = "BIGINT")
     private BigDecimal id;
     @ManyToOne(targetEntity = Cart.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "CartId", referencedColumnName = "id", columnDefinition = "bigint")
