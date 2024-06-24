@@ -23,16 +23,13 @@ services:
       PGADMIN_LISTEN_PORT: ${PGA_PORT}
     networks:
       - bachhoasi-networks
-    ports:
-      - ${PGA_PORT}:${PGA_PORT}
+      - nginx-proxy-manager
     volumes:
       - pgadmin-data:/var/lib/pgadmin4
 
   bachhoasi-api:
     container_name: bachhoasi-api-management
     image: ${DOCKER_USERNAME}/bach-hoa-si-api:latest
-    ports:
-      - ${PORT}:${PORT}
     restart: always
     environment:
       DB_URL: postgresql-bachhoasi
@@ -55,9 +52,15 @@ services:
       - ${GG_LOCAL_CREDENTIAL_PATH}:/bachhoasi/key
     networks:
       - bachhoasi-networks
+      - nginx-proxy-manager
 
 networks:
   bachhoasi-networks:
+    name: bach-hoa-si-api-test_bachhoasi-networks
+    external: true
+  nginx-proxy-manager:
+    name: nginx_proxy_manager_default
+    external: true
 
 volumes:
   postgres-data:
