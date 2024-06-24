@@ -39,7 +39,7 @@ import lombok.NoArgsConstructor;
 public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id", columnDefinition = "BIGSERIAL")
+    @Column(name = "Id", columnDefinition = "BIGINT")
     private BigDecimal id;
     @Column(name = "SubTotal")
     private BigDecimal subTotal;

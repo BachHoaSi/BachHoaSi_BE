@@ -24,7 +24,7 @@ public class ProductMenu implements Serializable {
     @EmbeddedId
     private ProductMenuId composeId;
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id",columnDefinition = "BIGSERIAL", nullable = false, unique = true)
+    @Column(name = "Id",columnDefinition = "BIGINT", nullable = false, unique = true)
     private BigDecimal id;
     @Column(name = "Price")
     private BigDecimal basePrice;

@@ -25,14 +25,14 @@ import lombok.NoArgsConstructor;
 public class OrderProductMenu implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id", columnDefinition = "BIGSERIAL")
+    @Column(name = "Id", columnDefinition = "BIGINT")
     private BigDecimal id;
     @ManyToOne(targetEntity = Order.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "OrderId", referencedColumnName = "id", columnDefinition = "bigint")
     private Order order;
     @Column(name = "Quantity")
     private Integer quantity;
-    @OneToOne(targetEntity = ProductMenu.class, fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
+    @ManyToOne(targetEntity = ProductMenu.class, fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "ProductMenuId", referencedColumnName = "id", nullable = false)
     private ProductMenu product;
 }

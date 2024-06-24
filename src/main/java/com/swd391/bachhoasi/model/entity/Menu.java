@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 public class Menu implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id", columnDefinition = "BIGSERIAL")
+    @Column(name = "Id", columnDefinition = "BIGINT")
     private BigDecimal id;
     @ManyToOne(targetEntity = StoreLevel.class, optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "StoreLevelId")

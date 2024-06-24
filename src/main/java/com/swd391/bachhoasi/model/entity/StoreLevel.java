@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class StoreLevel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id", columnDefinition = "BIGSERIAL")
+    @Column(name = "Id", columnDefinition = "BIGINT")
     private BigDecimal id;
     @Column(name = "Description", columnDefinition = "text")
     private String description;
