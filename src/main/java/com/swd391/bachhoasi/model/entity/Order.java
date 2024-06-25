@@ -75,4 +75,7 @@ public class Order implements Serializable {
     @ManyToOne(targetEntity = Shipper.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "ShipperId",referencedColumnName = "id", columnDefinition = "bigint")
     private Shipper shipper;
+    @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "StoreId")
+    private Store store;
 }
