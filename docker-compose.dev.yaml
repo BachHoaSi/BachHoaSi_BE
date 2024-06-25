@@ -7,41 +7,25 @@ services:
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_DB: ${DB_DATABASE}
-    ports:
-      - ${DB_PORT}:${DB_PORT}
+      POSTGRES_DB: ${DB_NAME}
     networks:
       - bachhoasi-networks
-
-  pg-admin-rode:
-    container_name: postgres-admin-local
-    image: elestio/pgadmin:REL-8_6
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGA_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGA_PASSWORD}
-      PGADMIN_LISTEN_PORT: ${PGA_PORT}
-    networks:
-      - bachhoasi-networks
-    ports:
-      - ${PGA_PORT}:${PGA_PORT}
-
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      
   bachhoasi-api:
     container_name: bachhoasi-api-management
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${DOCKER_USERNAME}/bach-hoa-si-api:latest
     ports:
       - ${PORT}:${PORT}
+    restart: always
     environment:
       DB_URL: postgresql-bachhoasi
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_PORT: ${DB_PORT}
-      DB_NAME: ${DB_DATABASE}
+      DB_NAME: ${DB_NAME}
       PENV: ${PENV}
-      AWS_ACCESS_ID: ${AWS_ACCESS_ID}
-      BUCKET_NAME: ${BUCKET_NAME} 
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       PORT: ${PORT}
       ACCESS_TOKEN_KEY: ${ACCESS_TOKEN_KEY}
       ACCESS_TOKEN_EXT: ${ACCESS_TOKEN_EXT}
@@ -49,8 +33,17 @@ services:
       REFRESH_TOKEN_EXT: ${REFRESH_TOKEN_EXT}
       BASE_URL_API: ${BASE_URL_API}
       ORIGIN_ALLOWED: ${ORIGIN_ALLOWED}
+      BUCKET: ${BUCKET}
+      GG_CREDENTIAL_PATH: /bachhoasi
+      GG_CREDENTIAL_NAME: ${GG_CREDENTIAL_NAME}
+    volumes:
+      - ${GG_LOCAL_CREDENTIAL_PATH}/${GG_CREDENTIAL_NAME}:/bachhoasi/${GG_CREDENTIAL_NAME}
     networks:
       - bachhoasi-networks
 
 networks:
   bachhoasi-networks:
+
+volumes:
+  postgres-data:
+  pgadmin-data:
