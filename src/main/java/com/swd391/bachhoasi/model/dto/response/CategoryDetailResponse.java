@@ -19,7 +19,7 @@ public class CategoryDetailResponse{
     private UserCategory createBy;
     private Date createdDate;
     private UserCategory updateBy;
-    private Date updateDate;
+    private Date updatedDate;
 
     @Data
     @AllArgsConstructor

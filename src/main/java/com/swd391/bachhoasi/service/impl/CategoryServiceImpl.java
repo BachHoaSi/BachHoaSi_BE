@@ -63,7 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
                         : new CategoryDetailResponse().new UserCategory(updatedBy.getId(), updatedBy.getFullName(),
                                 updatedBy.getRole().toString()))
                 .createdDate(data.getCreatedDate())
-                .updateDate(data.getUpdatedDate())
+                .updatedDate(data.getUpdatedDate())
                 .build();
     }
 

@@ -55,8 +55,4 @@ public class MenuServiceImpl implements MenuService {
             throw new ActionFailedException(String.format("Can't init menu with reason: %s", ex.toString()));
         }
     }
-
-    public void addingProductToMenu() {
-        
-    }
 }

@@ -16,8 +16,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Optional;
 
@@ -30,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public PaginationResponse<ProductResponse> getProducts(SearchRequestParamsDto request) {
         try {
-            Page<ProductResponse> products = productRepository.searchAnyByParameter(request.search(), request.pagination())
+            Page<ProductResponse> products = productRepository.searchProductAnyByParameter(request.search(), request.pagination())
                     .map(item -> ProductResponse.builder()
                             .id(item.getId())
                             .productCode(item.getProductCode())
@@ -78,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
             try{
                 productRepository.delete(deleteProduct);
             }catch (Exception e){
-                throw new IllegalArgumentException("Product is in use");
+                throw new ActionFailedException("Product is in use");
             }
         }
     }
@@ -86,38 +84,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse updateProduct(ProductRequest request, String code) {
         Product product = productRepository.findByProductCode(code).orElseThrow(() -> new NotFoundException(String.format("Not found product with code: %s", code)));
-        Field[] fields = ProductRequest.class.getDeclaredFields();
-        for(Field field : fields){
-            try{
-                field.setAccessible(true);
-                Object value = field.get(request);
-                if(value != null){
-                    if(field.getName().equalsIgnoreCase("categoryId")){
-                        Optional<Category> category = categoryRepository.findById((BigDecimal) value);
-                        updateProductField(product,field.getName(), category);
-                    }else {
-                        updateProductField(product,field.getName(),value);
-                    }
-                }
-            }catch (IllegalAccessException e){
-                throw new IllegalArgumentException("Invalid field name");
-            }
+        
+        product.setName(request.getName());
+        product.setBasePrice(request.getBasePrice());
+        product.setDescription(request.getDescription());
+        product.setStockQuantity(request.getStockQuantity());
+        product.setUrlImages(request.getUrlImages());
+        if (request.getCategoryId() != null || request.getCategoryId().intValue() > 0) {
+            Category category = categoryRepository.findById(request.getCategoryId())
+            .orElseThrow(() 
+            -> new NotFoundException(String.format("Not found category with id: %s", request.getCategoryId())));
+            product.setCategory(category);
         }
         Product updatedProduct = productRepository.save(product);
         return mapToProductResponse(updatedProduct);
     }
-
-    private void updateProductField(Product student, String fieldName, Object value) {
-        try {
-            Field productField = Product.class.getDeclaredField(fieldName);
-            productField.setAccessible(true);
-            productField.set(student, value);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new IllegalArgumentException("Invalid field name");
-        }
-    }
-
-    
 
     private ProductResponse mapToProductResponse(Product product) {
         return ProductResponse.builder()
