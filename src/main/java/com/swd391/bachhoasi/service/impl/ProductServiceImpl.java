@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public PaginationResponse<ProductResponse> getProducts(SearchRequestParamsDto request) {
         try {
-            Page<ProductResponse> products = productRepository.searchProductAnyByParameter(request.search(), request.pagination())
+            Page<ProductResponse> products = productRepository.searchProductByParameter(request.search(), request.pagination())
                     .map(item -> ProductResponse.builder()
                             .id(item.getId())
                             .productCode(item.getProductCode())
