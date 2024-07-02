@@ -63,7 +63,7 @@ public interface ProductRepository extends BaseBachHoaSiRepository<Product,BigDe
                                 "%" + item.getValue().toLowerCase() + "%"));
                     }
                 }
-                return criteriaBuilder.or(predicates.toArray(new Predicate[0]));
+                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             }
             
         };
