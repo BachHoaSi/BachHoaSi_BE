@@ -2,8 +2,10 @@ package com.swd391.bachhoasi.controller;
 
 import com.swd391.bachhoasi.model.dto.request.LoginDto;
 import com.swd391.bachhoasi.model.dto.request.RefreshTokenRequest;
+import com.swd391.bachhoasi.model.dto.request.ShipperLoginDto;
 import com.swd391.bachhoasi.model.dto.response.LoginResponse;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
+import com.swd391.bachhoasi.model.dto.response.ShipperLoginResponse;
 import com.swd391.bachhoasi.service.AuthService;
 import com.swd391.bachhoasi.util.AuthUtils;
 
@@ -53,6 +55,19 @@ public class AuthController {
             .headers(AuthUtils.getAuthenticationHeader(jwtAuthResponse))
             .body(responseObject);
     }
-    
 
+    @PostMapping("/shipper-authentication")
+    public ResponseEntity<ResponseObject> login(@RequestBody ShipperLoginDto shipperLoginDto){
+        ShipperLoginResponse jwtAuthResponse = authService.shipperLogin(shipperLoginDto);
+        var responseObject = ResponseObject.builder()
+                .code("AUTH_SUCCESS")
+                .message("Welcome To Bach Hoa Si")
+                .status(HttpStatus.OK)
+                .isSuccess(true)
+                .data(jwtAuthResponse)
+                .build();
+        return ResponseEntity.ok()
+                .headers(AuthUtils.shipperGetAuthenticationHeader(jwtAuthResponse))
+                .body(responseObject);
+    }
 }
