@@ -19,13 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private final OrderService orderService;
 
-    @PutMapping
-    public ResponseEntity<ResponseObject> updateStoreType(@RequestBody @Valid OrderRequest orderRequest) {
-        orderService.updateOrder(orderRequest);
-        return ResponseEntity.ok().build();
-    }
     @GetMapping
-    public ResponseEntity<ResponseObject> getAllByShipper(
+    public ResponseEntity<ResponseObject> getOrders(
             @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pagination,
             @RequestParam(required = false, name = "q") String query
     ) {
@@ -33,7 +28,7 @@ public class OrderController {
                 .search(query)
                 .wrapSort(pagination)
                 .build();
-        var result = orderService.getShipperOrders(queryDto.pagination(),queryDto.search());
+        var result = orderService.getOrders(queryDto.pagination(),queryDto.search());
         return ResponseEntity.ok(
                 ResponseObject.builder()
                         .code("ORDER_GET_SUCCESS")
