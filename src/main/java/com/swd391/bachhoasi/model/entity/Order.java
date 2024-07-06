@@ -4,6 +4,7 @@ package com.swd391.bachhoasi.model.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -47,6 +48,8 @@ public class Order implements Serializable {
     private Double discount;
     @Column(name = "GrandTotal")
     private BigDecimal grandTotal;
+    @Column(name = "OrderDate")
+    private LocalDateTime orderDate;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "OrderStatus")
     private OrderStatus orderStatus;
