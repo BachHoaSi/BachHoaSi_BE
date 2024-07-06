@@ -69,7 +69,6 @@ public class CorsConfig {
         List<String> corsAllowOrigins = new ArrayList<>();
         corsAllowOrigins.add("http://localhost:3000");
         corsAllowOrigins.add("https://api.fams.college");
-        corsAllowOrigins.add("https://bachhoasi-admin.fams.college");
         if (!allowOrigin.equals("null"))
             corsAllowOrigins.add(allowOrigin);
         return corsAllowOrigins.toArray(new String[0]);

@@ -100,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
         return mapToProductResponse(updatedProduct);
     }
 
-    private ProductResponse mapToProductResponse(Product product) {
+    public static ProductResponse mapToProductResponse(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
                 .productCode(product.getProductCode())

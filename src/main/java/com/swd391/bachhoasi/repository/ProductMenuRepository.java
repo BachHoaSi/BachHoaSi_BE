@@ -1,9 +1,11 @@
 package com.swd391.bachhoasi.repository;
 
-import java.math.BigDecimal;
+import org.springframework.stereotype.Repository;
 
-import com.swd391.bachhoasi.model.entity.Menu;
+import com.swd391.bachhoasi.model.entity.ProductMenu;
+import com.swd391.bachhoasi.model.entity.ProductMenuId;
 
-public interface ProductMenuRepository extends BaseBachHoaSiRepository<Menu, BigDecimal>{
+@Repository
+public interface ProductMenuRepository extends BaseBachHoaSiRepository<ProductMenu, ProductMenuId>{
     
 }

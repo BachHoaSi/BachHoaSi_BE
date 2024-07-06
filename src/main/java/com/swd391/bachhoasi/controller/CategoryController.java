@@ -110,7 +110,7 @@ public class CategoryController {
             .data(result)
             .isSuccess(true)
             .status(HttpStatus.OK)
-            .message("Create Success")
+            .message("Disable Category Success")
             .build()
         );
     }
