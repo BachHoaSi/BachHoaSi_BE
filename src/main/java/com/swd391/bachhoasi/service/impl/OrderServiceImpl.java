@@ -3,19 +3,25 @@ package com.swd391.bachhoasi.service.impl;
 import com.swd391.bachhoasi.model.constant.OrderStatus;
 import com.swd391.bachhoasi.model.dto.request.NewOrderRequest;
 import com.swd391.bachhoasi.model.dto.response.OrderResponse;
+import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ShipperResponseDto;
 import com.swd391.bachhoasi.model.entity.*;
+import com.swd391.bachhoasi.model.exception.ActionFailedException;
 import com.swd391.bachhoasi.model.exception.NotFoundException;
 import com.swd391.bachhoasi.repository.*;
 import com.swd391.bachhoasi.service.OrderService;
 import com.swd391.bachhoasi.service.ShipperService;
 import com.swd391.bachhoasi.util.AuthUtils;
+import com.swd391.bachhoasi.util.TextUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,6 +101,8 @@ public class OrderServiceImpl implements OrderService {
         }
         return convertOrderToOrderResponse(newOrder);
     }
+
+
     public OrderResponse convertOrderToOrderResponse(Order order){
         return OrderResponse.builder()
                 .orderId(order.getId())
@@ -109,5 +117,30 @@ public class OrderServiceImpl implements OrderService {
                 .point(order.getPoint())
                 .createdDate(order.getCreatedDate())
                 .build();
+    }
+
+    @Override
+    public PaginationResponse<OrderResponse> getOrders(Pageable pagination, Map<String, String> parameter) {
+        if(parameter == null) parameter = new HashMap<>();
+        var parameterList = TextUtils.convertKeysToCamel(parameter);
+        try {
+            Page<OrderResponse> orderPage = orderRepository.searchAnyByParameter(parameterList, pagination)
+                    .map(item -> OrderResponse.builder()
+                            .orderId(item.getId())
+                            .totalPrice(item.getGrandTotal())
+                            .orderStatus(item.getOrderStatus())
+                            .deliveryFeedback(item.getDeliveryFeedback())
+                            .point(item.getPoint())
+                            .storeAddress(item.getOrderContact().getBuildingNumber())
+                            .orderFeedback(item.getOrderFeedback())
+                            .createdDate(item.getCreatedDate())
+                            .deliveryFeedback(item.getDeliveryFeedback())
+                            .storeName(item.getStore().getName())
+                            .payingMethod(item.getPayingMethod())
+                            .build());
+            return new PaginationResponse<>(orderPage);
+        } catch (Exception ex ) {
+            throw new ActionFailedException(ex.getMessage(), "ORDER_GET_FAILED");
+        }
     }
 }
