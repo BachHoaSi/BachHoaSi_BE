@@ -60,4 +60,18 @@ public class ShipperController {
             .build()
         );
     }
+
+    @GetMapping("/shipper-least-order")
+    public ResponseEntity<ResponseObject> getShipperLeastOrder() {
+        var result = shipperService.getShipperWithLeastOrders();
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("GET_SHIPPER_SUCCESS")
+                        .isSuccess(true)
+                        .message("Get Shipper Success")
+                        .data(result)
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
 }

@@ -1,6 +1,7 @@
 package com.swd391.bachhoasi.service.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -67,4 +68,31 @@ public class ShipperServiceImpl implements ShipperService {
         .isLocked(item.getIsLocked())
         .build();
 	}
+
+    @Override
+    public ShipperResponseDto getShipperWithLeastOrders() {
+        List<Shipper> shippers = shipperRepository.findShipperWithLeastOrders();
+        if (shippers.isEmpty()) {
+            throw new NotFoundException("No shipper found with least orders");
+        }
+        Shipper item = shippers.get(0);
+        return ShipperResponseDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .phone(item.getPhone())
+                .email(item.getEmail())
+                .status(item.getStatus())
+                .shippingStatus(item.getShippingStatus())
+                .licenseNumber(item.getLicenseNumber())
+                .licenseIssueDate(item.getLicenseIssueDate())
+                .idCardNumber(item.getIdCardNumber())
+                .idCardIssuePlace(item.getIdCardIssuePlace())
+                .idCardIssueDate(item.getIdCardIssueDate())
+                .vehicleType(item.getVehicleType())
+                .createdDate(item.getCreatedDate())
+                .updatedDate(item.getUpdatedDate())
+                .isActive(item.getIsActive())
+                .isLocked(item.getIsLocked())
+                .build();
+    }
 }
