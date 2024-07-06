@@ -55,13 +55,13 @@ public class MenuServiceImpl implements MenuService {
         try {
             var result = menuRepository.saveAllAndFlush(menuList);
             var finalResult = result.stream().map(item -> MenuDetailResponse.builder()
-            .id(item.getId())
-            .level(item.getStoreLevel().getLevel())
-            .type(item.getStoreType().getName())
-            .status(item.getStatus())
-            .build()
+                    .id(item.getId())
+                    .level(item.getStoreLevel().getLevel())
+                    .type(item.getStoreType().getName())
+                    .status(item.getStatus())
+                    .build()
             ).toList();
-            return new PaginationResponse<>(finalResult);            
+            return new PaginationResponse<>(finalResult);
         } catch (Exception ex ) {
             throw new ActionFailedException(String.format("Can't init menu with reason: %s", ex.toString()));
         }
@@ -77,26 +77,26 @@ public class MenuServiceImpl implements MenuService {
 
     private ProductMenu convertToProductMenuEntity(ProductMenuRequest request, Product product, Menu menu) {
         var productMenuId = ProductMenuId.builder()
-        .menu(menu)
-        .product(product)
-        .build();
+                .menu(menu)
+                .product(product)
+                .build();
         var admin = authUtils.getAdminUserFromAuthentication();
         return ProductMenu.builder()
-        .composeId(productMenuId)
-        .basePrice(request.getPrice())
-        .admin(admin)
-        .status(request.getStatus())
-        .build();
+                .composeId(productMenuId)
+                .basePrice(request.getPrice())
+                .admin(admin)
+                .status(request.getStatus())
+                .build();
     }
 
     public static ProductMenuDetail convertProductMenuToProductMenuDetailDto(ProductMenu productMenu) {
         String adminName = productMenu.getAdmin() != null ? productMenu.getAdmin().getFullName() : "Default";
         var product = productMenu.getComposeId().getProduct();
         return ProductMenuDetail.builder()
-        .basePrice(productMenu.getBasePrice())
-        .status(productMenu.getStatus())
-        .adminName(adminName)
-        .productDetails(product != null ? ProductServiceImpl.mapToProductResponse(product):null)
-        .build();
+                .basePrice(productMenu.getBasePrice())
+                .status(productMenu.getStatus())
+                .adminName(adminName)
+                .productDetails(product != null ? ProductServiceImpl.mapToProductResponse(product):null)
+                .build();
     }
 }
