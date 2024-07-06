@@ -3,10 +3,13 @@ package com.swd391.bachhoasi.service.impl;
 import com.swd391.bachhoasi.model.constant.OrderStatus;
 import com.swd391.bachhoasi.model.dto.request.NewOrderRequest;
 import com.swd391.bachhoasi.model.dto.response.OrderResponse;
+import com.swd391.bachhoasi.model.dto.response.ShipperResponseDto;
 import com.swd391.bachhoasi.model.entity.*;
 import com.swd391.bachhoasi.model.exception.NotFoundException;
 import com.swd391.bachhoasi.repository.*;
 import com.swd391.bachhoasi.service.OrderService;
+import com.swd391.bachhoasi.service.ShipperService;
+import com.swd391.bachhoasi.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +29,16 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderContactRepository orderContactRepository;
     private final OrderProductMenuRepository orderProductMenuRepository;
-
+    private final AuthUtils authUtils;
+    private final ShipperService shipperService;
+    private final ShipperRepository shipperRepository;
 
     @Override
     public OrderResponse placeOrder(NewOrderRequest order) {
         Store store = storeRepository.findById(order.getStoreId()).orElseThrow(()-> new NotFoundException("Store not found"));
-
+        var loginUser = authUtils.getAdminUserFromAuthentication();
+        ShipperResponseDto shipperResponseDto = shipperService.getShipperWithLeastOrders();
+        Shipper shipper = shipperRepository.findById(shipperResponseDto.getId()).get();
         // init new order and order contact
         Order newOrder = Order.builder()
                 .store(store)
@@ -40,6 +47,8 @@ public class OrderServiceImpl implements OrderService {
                 .orderDate(order.getDeliveryTime())
                 .createdDate(new Date(System.currentTimeMillis()))
                 .updatedDate(new Date(System.currentTimeMillis()))
+                .admin(loginUser)
+                .shipper(shipper)
                 .build();
         OrderContact orderContact = OrderContact.builder()
                 .buildingNumber(store.getLocation())

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -20,6 +22,8 @@ import lombok.Data;
 @Entity(name = "ProductMenu")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductMenu implements Serializable {
     @EmbeddedId
     private ProductMenuId composeId;
