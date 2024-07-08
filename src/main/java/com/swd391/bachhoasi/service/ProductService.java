@@ -7,6 +7,8 @@ import com.swd391.bachhoasi.model.dto.response.ProductResponse;
 
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 
 @Service
 public interface ProductService {
@@ -18,4 +20,5 @@ public interface ProductService {
     void deleteProduct(String code);
 
     ProductResponse updateProduct(ProductRequest request, String code);
+    ProductResponse disableProduct(String code);
 }
