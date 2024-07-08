@@ -29,7 +29,7 @@ public class ProductMenuServiceImpl implements ProductMenuService {
     @Override
     public ProductMenuDetail updateProductMenu(ProductMenuRequest productMenuRequest) {
         if (productMenuRequest == null)
-            throw  new NullPointerException("productMenuRequest is null");
+            throw  new NotFoundException("ProductMenu request is null");
         var productMenuId = new ProductMenuId();
         productMenuId.setMenu(menuRepository.findById(productMenuRequest.getMenuId()).orElseThrow(() -> new NotFoundException("menu not found")));
         productMenuId.setProduct(productRepository.findById(productMenuRequest.getProductId()).orElseThrow(() -> new NotFoundException("product not found")));

@@ -88,7 +88,7 @@ public class ProductController {
 
     }
 
-    @PutMapping("/disable")
+    @PatchMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> disableProduct(@RequestParam("code") String code) {
         ProductResponse productResponse = productService.disableProduct(code);

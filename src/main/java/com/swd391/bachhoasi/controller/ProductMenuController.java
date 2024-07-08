@@ -3,7 +3,6 @@ package com.swd391.bachhoasi.controller;
 import com.swd391.bachhoasi.model.dto.request.ProductMenuRequest;
 import com.swd391.bachhoasi.model.dto.response.ProductMenuDetail;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
-import com.swd391.bachhoasi.model.entity.ProductMenuId;
 import com.swd391.bachhoasi.service.ProductMenuService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-
 @RestController
-@RequestMapping("/product-menu")
+@RequestMapping("/product-menues")
 @RequiredArgsConstructor
 public class ProductMenuController {
     private final ProductMenuService productMenuService;

@@ -1,7 +1,5 @@
 package com.swd391.bachhoasi.util;
 
-import com.swd391.bachhoasi.model.entity.Shipper;
-import com.swd391.bachhoasi.repository.ShipperRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -16,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthUtils {
     private final AdminRepository adminRepository;
-    private final ShipperRepository shipperRepository;
 
     public static HttpHeaders getAuthenticationHeader(LoginResponse loginResponse){
         var header =  new HttpHeaders();
