@@ -30,7 +30,7 @@ jobs:
   
   staging-api-deploy:
     name: Deploy Staging API Manager To Google Service Server For Testing
-    runs-on: deploy
+    runs-on: arisa-deploy
     needs: bach-hoa-si-api-build
     env:
       PGA_EMAIL: ${{secrets.PGA_EMAIL}}
