@@ -8,5 +8,4 @@ import com.swd391.bachhoasi.model.entity.Menu;
 
 @Repository
 public interface MenuRepository extends BaseBachHoaSiRepository<Menu, BigDecimal> {
-    
 }

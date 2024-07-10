@@ -38,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
     private final AuthUtils authUtils;
     private final ShipperService shipperService;
     private final ShipperRepository shipperRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public OrderResponse placeOrder(NewOrderRequest order) {
@@ -48,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
         // init new order and order contact
         Order newOrder = Order.builder()
                 .store(store)
-                .orderStatus(OrderStatus.ACCEPTED)
+                .orderStatus(OrderStatus.PICKED_UP)
                 .payingMethod(order.getPayingMethod())
                 .orderDate(order.getDeliveryTime())
                 .createdDate(new Date(System.currentTimeMillis()))
@@ -75,6 +76,15 @@ public class OrderServiceImpl implements OrderService {
         List<OrderProductMenu> orderProducts = new ArrayList<>();
         int totalPrice = 0;
         int subTotal = 0;
+        for(Map.Entry<BigDecimal,Integer> entry : orderItems.entrySet()){
+            BigDecimal productId = entry.getKey();
+            if (!productRepository.findById(productId).get().getStatus()){
+                throw new ActionFailedException(productRepository.findById(productId).get().getName() + " not availble");
+            }
+            if (productRepository.findById(productId).get().getStockQuantity() < entry.getValue()){
+                throw new ActionFailedException(productRepository.findById(productId).get().getName() + " is not enough");
+            }
+        }
         for(ProductMenu item : productMenus){
             OrderProductMenu orderProductMenu = OrderProductMenu.builder()
                     .order(newOrder)
@@ -101,6 +111,7 @@ public class OrderServiceImpl implements OrderService {
         }
         return convertOrderToOrderResponse(newOrder);
     }
+
 
 
     public OrderResponse convertOrderToOrderResponse(Order order){
@@ -142,5 +153,55 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception ex ) {
             throw new ActionFailedException(ex.getMessage(), "ORDER_GET_FAILED");
         }
+    }
+
+    @Override
+    public OrderResponse acceptOrder(BigDecimal orderId) {
+        var order = orderRepository.findById(orderId);
+        if (order.isEmpty()) throw new NotFoundException("Order not found");
+        if (order.get().getOrderStatus() != OrderStatus.PICKED_UP)
+            throw new ActionFailedException("Cannot pickup this order");
+        List<OrderProductMenu> orderProductMenuList = orderProductMenuRepository.findByOrderId(orderId);
+        if (orderProductMenuList.isEmpty())
+            throw new NotFoundException("Cannot find order product");
+        Map<BigDecimal,Integer> orderItems = convertToMap(orderProductMenuList);
+        List<BigDecimal> productIds = new ArrayList<>(orderItems.keySet());
+        List<BigDecimal> missingIds = new ArrayList<>(orderItems.keySet());
+        for(BigDecimal productId : productIds){
+            if (productRepository.existsById(productId)){
+                missingIds.remove(productId);
+            }
+        }
+        if (!missingIds.isEmpty()) {
+            throw new IllegalArgumentException("The following IDs do not exist: " + missingIds);
+        }
+        for(Map.Entry<BigDecimal,Integer> entry : orderItems.entrySet()){
+            BigDecimal productId = entry.getKey();
+            Integer quantity = entry.getValue();
+            Product productEntity = productRepository.findById(productId).get();
+            if (!productEntity.getStatus()){
+                throw new ActionFailedException(productEntity.getName() + "is disabled");
+            }
+            if (productEntity.getStockQuantity() < entry.getValue()){
+                throw new ActionFailedException(productEntity.getName() + " is not enough");
+            }
+            var product = productRepository.findById(productId).get();
+            product.setStockQuantity(product.getStockQuantity() - quantity);
+            productRepository.save(product);
+        }
+        order.get().setOrderStatus(OrderStatus.ACCEPTED);
+        orderRepository.save(order.get());
+
+        OrderProductMenu orderProductMenu = new OrderProductMenu();
+
+        return convertOrderToOrderResponse(order.get());
+    }
+
+    public static Map<BigDecimal, Integer> convertToMap(List<OrderProductMenu> orderProductMenus) {
+        Map<BigDecimal, Integer> orderItems = new HashMap<>();
+        for (OrderProductMenu opm : orderProductMenus) {
+            orderItems.put(opm.getProduct().getComposeId().getProduct().getId(), opm.getQuantity());
+        }
+        return orderItems;
     }
 }
