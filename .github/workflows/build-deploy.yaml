@@ -54,6 +54,7 @@ jobs:
       ORIGIN_ALLOWED: ${{secrets.ORIGIN_ALLOWED}}
       GG_LOCAL_CREDENTIAL_PATH: ${{secrets.GG_CREDENTIAL_PATH}}
       GG_CREDENTIAL_NAME: ${{secrets.GG_CREDENTIAL_NAME}}
+      GG_CREDENTIAL_JSON: ${{secrets.GG_CREDENTIAL_JSON}}
       BUCKET: ${{secrets.BUCKET}}
 
       DOCKER_USERNAME: ${{ secrets.REGISTRY_NAME }}

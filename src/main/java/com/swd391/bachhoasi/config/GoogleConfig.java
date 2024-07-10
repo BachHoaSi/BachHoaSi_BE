@@ -1,7 +1,9 @@
 package com.swd391.bachhoasi.config;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -20,16 +22,16 @@ import com.google.firebase.FirebaseOptions;
 public class GoogleConfig {
     @Value("${google.firebase.bucket}")
     private String bucket;
-    @Value("${google.credentials.path}")
-    private String configPath;
     @Value("${google.credentials.config-name}")
     private String configName;
+    private String configJson;
     @Bean
     GoogleCredentials googleCloudCredentialConfig() throws IOException {
-        if(configPath == null || configPath.isEmpty()) {
+        if(configJson == null || configJson.isEmpty()) {
             return ServiceAccountCredentials.fromStream(new ClassPathResource(configName).getInputStream());
         }
-        return ServiceAccountCredentials.fromStream(new FileInputStream(String.format("%s/%s", configPath, configName)));
+        InputStream in = new ByteArrayInputStream(configJson.getBytes());
+        return ServiceAccountCredentials.fromStream(in);
     }
     @EventListener
     void initFirebaseConnection(ApplicationReadyEvent event) {
