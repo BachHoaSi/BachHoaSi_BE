@@ -24,6 +24,7 @@ public class GoogleConfig {
     private String bucket;
     @Value("${google.credentials.config-name}")
     private String configName;
+    @Value("${google.credentials.json}")
     private String configJson;
     @Bean
     GoogleCredentials googleCloudCredentialConfig() throws IOException {
