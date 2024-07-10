@@ -1,36 +1,11 @@
 version: '3.8'
 services:
-  postgresql-bachhoasi:
-    container_name: postgresql-bachhoasi-database
-    image: postgres:13.14-bullseye
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_DB: ${DB_NAME}
-    networks:
-      - bachhoasi-networks
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-
-  pg-admin-rode:
-    container_name: postgres-admin-local
-    image: elestio/pgadmin:REL-8_6
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGA_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGA_PASSWORD}
-      PGADMIN_LISTEN_PORT: ${PGA_PORT}
-    networks:
-      - bachhoasi-networks
-      - nginx-proxy-manager
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin4
-
   bachhoasi-api:
     container_name: bachhoasi-api-management
     image: ${DOCKER_USERNAME}/bach-hoa-si-api:latest
     restart: always
+    ports:
+      - ${PORT}:${PORT}
     environment:
       DB_URL: postgresql-bachhoasi
       DB_USERNAME: ${DB_USERNAME}
@@ -52,17 +27,8 @@ services:
       - ${GG_LOCAL_CREDENTIAL_PATH}:/bachhoasi/key
     networks:
       - bachhoasi-networks
-      - nginx-proxy-manager
 
 networks:
   bachhoasi-networks:
-    name: bach-hoa-si-api-test_bachhoasi-networks
+    name: bachhoasi-networks
     external: true
-  nginx-proxy-manager:
-    name: nginx_proxy_manager_default
-    external: true
-
-volumes:
-  postgres-data:
-  pgadmin-data:
-
