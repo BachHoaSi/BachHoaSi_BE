@@ -3,7 +3,6 @@ package com.swd391.bachhoasi.controller;
 import com.swd391.bachhoasi.model.dto.request.NewOrderRequest;
 import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.OrderResponse;
-import com.swd391.bachhoasi.model.dto.response.ProductResponse;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -3,8 +3,6 @@ package com.swd391.bachhoasi.model.dto.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.swd391.bachhoasi.model.constant.OrderStatus;
 import com.swd391.bachhoasi.model.constant.PayingMethod;
-import com.swd391.bachhoasi.model.entity.Shipper;
-import com.swd391.bachhoasi.model.entity.Store;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;

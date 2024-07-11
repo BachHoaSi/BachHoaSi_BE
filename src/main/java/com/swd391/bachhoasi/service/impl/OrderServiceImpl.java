@@ -78,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal subTotal = BigDecimal.ZERO;
         for(Map.Entry<BigDecimal,Integer> entry : orderItems.entrySet()){
             BigDecimal productId = entry.getKey();
-            if (!productRepository.findById(productId).get().getStatus()){
+            if (!productRepository.findById(productId).get().getStatus().booleanValue()){
                 throw new ActionFailedException(productRepository.findById(productId).get().getName() + " not availble");
             }
             if (productRepository.findById(productId).get().getStockQuantity() < entry.getValue()){
@@ -182,7 +182,7 @@ public class OrderServiceImpl implements OrderService {
             BigDecimal productId = entry.getKey();
             Integer quantity = entry.getValue();
             Product productEntity = productRepository.findById(productId).get();
-            if (!productEntity.getStatus()){
+            if (!productEntity.getStatus().booleanValue()){
                 throw new ActionFailedException(productEntity.getName() + "is disabled");
             }
             if (productEntity.getStockQuantity() < entry.getValue()){
@@ -194,8 +194,6 @@ public class OrderServiceImpl implements OrderService {
         }
         order.get().setOrderStatus(OrderStatus.ACCEPTED);
         orderRepository.save(order.get());
-
-        OrderProductMenu orderProductMenu = new OrderProductMenu();
 
         return convertOrderToOrderResponse(order.get());
     }
