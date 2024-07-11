@@ -2,7 +2,8 @@ package com.swd391.bachhoasi.service.impl;
 
 import com.swd391.bachhoasi.model.entity.Admin;
 import com.swd391.bachhoasi.repository.AdminRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,7 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final AdminRepository adminRepository;
