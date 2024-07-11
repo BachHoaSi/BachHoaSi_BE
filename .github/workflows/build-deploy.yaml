@@ -30,7 +30,7 @@ jobs:
   
   staging-api-deploy:
     name: Deploy Staging API Manager To Google Service Server For Testing
-    runs-on: deploy
+    runs-on: arisa-deploy
     needs: bach-hoa-si-api-build
     env:
       PGA_EMAIL: ${{secrets.PGA_EMAIL}}
@@ -54,6 +54,7 @@ jobs:
       ORIGIN_ALLOWED: ${{secrets.ORIGIN_ALLOWED}}
       GG_LOCAL_CREDENTIAL_PATH: ${{secrets.GG_CREDENTIAL_PATH}}
       GG_CREDENTIAL_NAME: ${{secrets.GG_CREDENTIAL_NAME}}
+      GG_CREDENTIAL_JSON: ${{secrets.GG_CREDENTIAL_JSON}}
       BUCKET: ${{secrets.BUCKET}}
 
       DOCKER_USERNAME: ${{ secrets.REGISTRY_NAME }}
@@ -67,7 +68,7 @@ jobs:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
     - name: Stop BachHoaSi API
-      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-api-test down bachhoasi-api
+      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-api down bachhoasi-api
 
     - name: Clean Old BachHoaSi Image
       run: docker rmi ${{ secrets.REGISTRY_NAME }}/bach-hoa-si-api:latest 
@@ -77,4 +78,4 @@ jobs:
       run: doctl registry login --expiry-seconds 1200
 
     - name: Deploy API
-      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-api-test up -d bachhoasi-api
+      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-api up -d bachhoasi-api
