@@ -74,8 +74,8 @@ public class OrderServiceImpl implements OrderService {
         List<ProductMenu> productMenus = productMenuRepository.findBySubIds(productIds);
 
         List<OrderProductMenu> orderProducts = new ArrayList<>();
-        int totalPrice = 0;
-        int subTotal = 0;
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        BigDecimal subTotal = BigDecimal.ZERO;
         for(Map.Entry<BigDecimal,Integer> entry : orderItems.entrySet()){
             BigDecimal productId = entry.getKey();
             if (!productRepository.findById(productId).get().getStatus()){
@@ -92,13 +92,16 @@ public class OrderServiceImpl implements OrderService {
                     .quantity(orderItems.get(item.getId()))
                     .build();
             orderProducts.add(orderProductMenu);
-            subTotal += item.getComposeId().getProduct().getBasePrice().intValue() * orderItems.get(item.getId());
-            totalPrice += item.getBasePrice().intValue() *  orderItems.get(item.getId());
-        }
-        newOrder.setGrandTotal(BigDecimal.valueOf(totalPrice));
-        newOrder.setSubTotal(BigDecimal.valueOf(subTotal));
+            int intValue = orderItems.get(item.getId()); // example integer value
+            BigDecimal bigDecimalValue = new BigDecimal(intValue);
+            totalPrice = totalPrice.add(item.getBasePrice().multiply(bigDecimalValue));
+            subTotal = subTotal.add(item.getComposeId().getProduct().getBasePrice().multiply(bigDecimalValue));
 
-        int point = (int) (totalPrice * 0.1); // 10% of total price
+        }
+        newOrder.setGrandTotal(totalPrice);
+        newOrder.setSubTotal(subTotal);
+
+        int point = (int) (totalPrice.intValue() * 0.1); // 10% of total price
         newOrder.setPoint(point);
 
         try{
