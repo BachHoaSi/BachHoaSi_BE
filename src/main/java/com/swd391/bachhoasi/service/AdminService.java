@@ -14,6 +14,6 @@ public interface AdminService {
     AdminResponse removeUser(BigDecimal id);
     AdminResponse changeUserLockStatus(BigDecimal id, Boolean isLock);
 
-    AdminRequest activeAccount(BigDecimal id);
+    AdminResponse activeAccount(BigDecimal id);
 
 }

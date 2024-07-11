@@ -1,6 +1,7 @@
 package com.swd391.bachhoasi.model.constant;
 
 public enum Role {
-    ADMIN,
-    MANAGER
+    STAFF,
+    MANAGER,
+    ADMIN
 }

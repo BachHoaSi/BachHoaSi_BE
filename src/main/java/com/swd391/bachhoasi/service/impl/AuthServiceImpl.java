@@ -4,12 +4,10 @@ import com.swd391.bachhoasi.model.constant.TokenType;
 import com.swd391.bachhoasi.model.dto.request.LoginDto;
 import com.swd391.bachhoasi.model.dto.response.LoginResponse;
 import com.swd391.bachhoasi.model.entity.Admin;
-import com.swd391.bachhoasi.model.entity.Shipper;
 import com.swd391.bachhoasi.model.exception.AuthFailedException;
 import com.swd391.bachhoasi.repository.AdminRepository;
 import com.swd391.bachhoasi.security.JwtProvider;
 import com.swd391.bachhoasi.service.AuthService;
-import com.swd391.bachhoasi.repository.ShipperRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +23,6 @@ public class AuthServiceImpl implements AuthService {
     private final AdminRepository adminRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
-    private final ShipperRepository shipperRepository;
 
     @Override
     public LoginResponse login(LoginDto loginDto) {

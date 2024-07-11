@@ -13,28 +13,32 @@ import com.swd391.bachhoasi.model.dto.response.AdminResponse;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.entity.Admin;
 import com.swd391.bachhoasi.model.exception.ActionFailedException;
+import com.swd391.bachhoasi.model.exception.NotFoundException;
+import com.swd391.bachhoasi.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi.repository.AdminRepository;
 import com.swd391.bachhoasi.service.AdminService;
+import com.swd391.bachhoasi.util.AuthUtils;
 import com.swd391.bachhoasi.util.BaseUtils;
-
 
 @Service
 @AllArgsConstructor
 public class AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthUtils authUtils;
+
     public PaginationResponse<AdminResponse> getAllAdmin(SearchRequestParamsDto search) {
-        var dbResult = adminRepository.searchAnyByParameter(search.search(), search.pagination()).map(item -> 
-        AdminResponse.builder()
-        .id(item.getId())
-        .fullName(item.getFullName())
-        .isActive(item.getIsActive())
-        .isLocked(item.getIsLocked())
-        .role(item.getRole().toString())
-        .build()
-        );
+        var dbResult = adminRepository.searchAnyByParameter(search.search(), search.pagination())
+                .map(item -> AdminResponse.builder()
+                        .id(item.getId())
+                        .fullName(item.getFullName())
+                        .isActive(item.getIsActive())
+                        .isLocked(item.getIsLocked())
+                        .role(item.getRole().toString())
+                        .build());
         return new PaginationResponse<>(dbResult);
     }
+
     @Override
     public AdminResponse importNewUser(AdminRequest adminRequest) {
         var admin = new Admin();
@@ -48,37 +52,103 @@ public class AdminServiceImpl implements AdminService {
             var dbResult = adminRepository.save(admin);
             return convertToDto(dbResult);
         } catch (Exception ex) {
-            throw new ActionFailedException("");
+            throw new ActionFailedException(
+                    String.format("Something happen when adding new user to system: %s", ex.getMessage()));
         }
     }
+
     @Override
     public AdminResponse updateUser(BigDecimal id, AdminRequest adminRequest) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateUser'");
+        var userDb = adminRepository.findById(id).orElseThrow(() -> new NotFoundException(
+                String.format("Can't found admin with id: %s", id.toString())));
+        Admin updateEntity = addUpdateFieldToAdminEntity(adminRequest, userDb);
+        try {
+            updateEntity = adminRepository.save(updateEntity);
+            return convertToDto(updateEntity);
+        } catch (Exception ex) {
+            throw new ActionFailedException(
+                    String.format("Username duplicated or something else error: %s", ex.getMessage()));
+        }
     }
+
     @Override
     public AdminResponse removeUser(BigDecimal id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeUser'");
+        Admin userDb = adminRepository.findById(id).orElseThrow(() -> new NotFoundException(
+                String.format("Can't found admin with id: %s", id.toString())));
+        var currentUser = authUtils.getAdminUserFromAuthentication();
+        if (userDb.getId().equals(id)) {
+            throw new ValidationFailedException("Can't disable your self");
+        }
+        if (currentUser.getRole().compareTo(userDb.getRole()) >= 0) {
+            try {
+                userDb.setIsActive(false);
+                userDb.setIsLocked(true);
+                adminRepository.save(userDb);
+                return convertToDto(userDb);
+            } catch (Exception ex) {
+                throw new ActionFailedException(
+                    String.format("Something happen when deactivated user: %s", ex.getMessage())
+                );
+            }
+        }
+        throw new ValidationFailedException("Can't update user that is higher role");
     }
+
     @Override
     public AdminResponse changeUserLockStatus(BigDecimal id, Boolean isLock) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'changeUserLockStatus'");
+        Admin userDb = adminRepository.findById(id).orElseThrow(() -> new NotFoundException(
+                String.format("Can't found admin with id: %s", id.toString())));
+        var currentUser = authUtils.getAdminUserFromAuthentication();
+        if (userDb.getId().equals(id)) {
+            throw new ValidationFailedException("Can't change lock status of your self");
+        }
+        if (currentUser.getRole().compareTo(userDb.getRole()) >= 0) {
+            try {
+                userDb.setIsActive(isLock);
+                adminRepository.save(userDb);
+                return convertToDto(userDb);
+            } catch (Exception ex) {
+                throw new ActionFailedException(
+                    String.format("Something happen when change lock status user: %s", ex.getMessage())
+                );
+            }
+        }
+        throw new ValidationFailedException("Can't update user that is higher role");
     }
+
     @Override
-    public AdminRequest activeAccount(BigDecimal id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'activeAccount'");
+    public AdminResponse activeAccount(BigDecimal id) {
+        Admin userDb = adminRepository.findById(id).orElseThrow(() -> new NotFoundException(
+                String.format("Can't found admin with id: %s", id.toString())));
+        try {
+            userDb.setIsActive(true);
+            adminRepository.save(userDb);
+            return convertToDto(userDb);
+        } catch (Exception ex) {
+            throw new ActionFailedException(
+                String.format("Something happen when deactivated user: %s", ex.getMessage())
+            );
+        }
     }
 
     private AdminResponse convertToDto(Admin item) {
         return AdminResponse.builder()
-        .id(item.getId())
-        .fullName(item.getFullName())
-        .isActive(item.getIsActive())
-        .isLocked(item.getIsLocked())
-        .role(item.getRole().toString())
-        .build();
+                .id(item.getId())
+                .fullName(item.getFullName())
+                .isActive(item.getIsActive())
+                .isLocked(item.getIsLocked())
+                .role(item.getRole().toString())
+                .build();
+    }
+
+    private Admin addUpdateFieldToAdminEntity(AdminRequest request, Admin adminEntity) {
+        if (adminEntity == null || request == null) {
+            throw new ValidationFailedException(
+                    "Request or Admin entity is null on function::addUpdateFieldToAdminEntity");
+        }
+        adminEntity.setUsername(request.getUsername());
+        adminEntity.setFullName(request.getFullName());
+        adminEntity.setRole(request.getRole());
+        return adminEntity;
     }
 }
