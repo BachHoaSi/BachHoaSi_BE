@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/product-menues")
+@RequestMapping("/product-menus")
 @RequiredArgsConstructor
 public class ProductMenuController {
     private final ProductMenuService productMenuService;
@@ -29,5 +29,18 @@ public class ProductMenuController {
                 .build();
         return ResponseEntity.ok().body(responseObject);
 
+    }
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('STAFF')")
+    public ResponseEntity<ResponseObject> importProductMenu(@RequestBody @Valid ProductMenuRequest productMenuRequest) {
+        ProductMenuDetail productMenuResponse = productMenuService.addProductMenu(productMenuRequest);
+        var responseObject = ResponseObject.builder()
+                .data(productMenuResponse)
+                .code("PRODUCT_MENU_ADD_SUCCESS")
+                .message("Add Product Menu Successfully")
+                .status(HttpStatus.OK)
+                .isSuccess(true)
+                .build();
+        return ResponseEntity.ok().body(responseObject);
     }
 }
