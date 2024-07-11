@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Builder
 @Validated
 public class ProductRequest {
-
+    private BigDecimal id;
     @NotEmpty(message = "Product name should not be null or empty")
     private String name;
     @DecimalMin(value = "0.001", message = "Base price should not be less than 0.001")

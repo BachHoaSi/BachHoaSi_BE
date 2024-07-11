@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthUtils {
     private final AdminRepository adminRepository;
+
     public static HttpHeaders getAuthenticationHeader(LoginResponse loginResponse){
         var header =  new HttpHeaders();
         header.add("Authorization", String.format("%s %s", TextUtils.toCamelCase(loginResponse.toString(), true) , loginResponse.getAccessToken()));
@@ -30,4 +31,5 @@ public class AuthUtils {
             throw new AuthFailedException("User is not authenticated, please login");
         }
     }
+
 }
