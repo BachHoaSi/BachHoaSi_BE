@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import com.swd391.bachhoasi.model.entity.ProductMenuId;
 import lombok.Builder;
 import lombok.Data;
 
