@@ -49,7 +49,18 @@ public class AdminController {
             .build();
         return ResponseEntity.ok(responseObject);
     }
-
+    @GetMapping("{id}")
+    public ResponseEntity<ResponseObject> getAdminById(@PathVariable(name = "id") BigDecimal id) {
+        var result = adminService.getAdminById(id);
+        var responseObject = ResponseObject
+            .builder()
+            .code("GET_ADMIN_SUCCESS")
+            .message("Get Admin Successfully")
+            .isSuccess(true)
+            .data(result)
+            .build();
+        return ResponseEntity.ok(responseObject);
+    }
     @PostMapping
     public ResponseEntity<ResponseObject> importNewAdmin(@RequestBody AdminRequest adminRequest) {
         var result = adminService.importNewUser(adminRequest);

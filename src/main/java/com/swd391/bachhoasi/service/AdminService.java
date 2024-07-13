@@ -10,6 +10,7 @@ import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 public interface AdminService {
     PaginationResponse<AdminResponse> getAllAdmin(SearchRequestParamsDto search);
     AdminResponse importNewUser(AdminRequest adminRequest);
+    AdminResponse getAdminById (BigDecimal id);
     AdminResponse updateUser(BigDecimal id ,AdminRequest adminRequest);
     AdminResponse removeUser(BigDecimal id);
     AdminResponse changeUserLockStatus(BigDecimal id, Boolean isLock);

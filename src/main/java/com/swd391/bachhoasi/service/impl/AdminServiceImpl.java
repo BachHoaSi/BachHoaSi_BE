@@ -39,6 +39,12 @@ public class AdminServiceImpl implements AdminService {
         return new PaginationResponse<>(dbResult);
     }
 
+    public AdminResponse getAdminById (BigDecimal id) {
+        var userDb = adminRepository.findById(id).orElseThrow(() -> new NotFoundException(
+                String.format("Can't found admin with id: %s", id.toString())));
+        return convertToDto(userDb);
+    }
+
     @Override
     public AdminResponse importNewUser(AdminRequest adminRequest) {
         var admin = new Admin();
