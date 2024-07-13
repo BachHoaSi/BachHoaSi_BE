@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Optional;
 
@@ -104,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse disableProduct(String code) {
         Product product = productRepository.findByProductCode(code).orElseThrow(() -> new NotFoundException(String.format("Not found product with code: %s", code)));
-        if (!product.getStatus())
+        if (!product.getStatus().booleanValue())
             throw new ActionFailedException("Product is in disable");
         product.setStatus(false);
         Product updatedProduct = productRepository.save(product);
