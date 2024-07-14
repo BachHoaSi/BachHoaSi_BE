@@ -50,6 +50,7 @@ public class AdminController {
         return ResponseEntity.ok(responseObject);
     }
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> getAdminById(@PathVariable(name = "id") BigDecimal id) {
         var result = adminService.getAdminById(id);
         var responseObject = ResponseObject
@@ -62,6 +63,7 @@ public class AdminController {
         return ResponseEntity.ok(responseObject);
     }
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> importNewAdmin(@RequestBody AdminRequest adminRequest) {
         var result = adminService.importNewUser(adminRequest);
         var responseObject = ResponseObject
@@ -74,6 +76,7 @@ public class AdminController {
         return ResponseEntity.ok(responseObject);
     }
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> updateAdmin (@PathVariable(name = "id") BigDecimal id, @RequestBody AdminRequest request) {
         var result = adminService.updateUser(id,request);
         var responseObject = ResponseObject
@@ -87,6 +90,7 @@ public class AdminController {
     }
 
     @PatchMapping("disable/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> disableUser(@PathVariable BigDecimal id) {
         var result = adminService.removeUser(id);
         var responseObject = ResponseObject
@@ -100,6 +104,7 @@ public class AdminController {
     }
 
     @PatchMapping("locked/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> updateUserLock(@PathVariable BigDecimal id, @RequestParam(name = "locked") Boolean isLocked) {
         var result = adminService.changeUserLockStatus(id, isLocked);
         var responseObject = ResponseObject
@@ -112,6 +117,7 @@ public class AdminController {
         return ResponseEntity.ok(responseObject);
     }
     @PatchMapping("activate/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> activeAccount(@PathVariable(name = "id") BigDecimal id) {
         var result = adminService.activeAccount(id);
         var responseObject = ResponseObject
