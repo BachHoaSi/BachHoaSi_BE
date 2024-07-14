@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.service.impl;
 
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.request.StoreTypeRequest;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.StoreTypeBasicResponse;
@@ -69,11 +70,9 @@ public class StoreTypeServiceImpl implements StoreTypeService {
     }
 
     @Override
-    public PaginationResponse<StoreTypeResponse> getStoreTypes(Pageable pageable, Map<String, String> parameter) {
-        if(parameter == null) parameter = new HashMap<>();
-        var parameterList = TextUtils.convertKeysToCamel(parameter);
+    public PaginationResponse<StoreTypeResponse> getStoreTypes(SearchRequestParamsDto request) {
         try {
-            Page<StoreTypeResponse> storeLevelPage = storeTypeRepository.searchAnyByParameter(parameterList, pageable)
+            Page<StoreTypeResponse> storeLevelPage = storeTypeRepository.searchAnyByParameter(request.search(), request.pagination())
                     .map(item -> StoreTypeResponse.builder()
                             .id(item.getId())
                             .name(item.getName())

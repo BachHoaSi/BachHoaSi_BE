@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.service;
 
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.request.StoreTypeRequest;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.StoreTypeBasicResponse;
@@ -15,6 +16,6 @@ public interface StoreTypeService {
     PaginationResponse<StoreTypeBasicResponse> getBasicAllStoreType();
     StoreTypeResponse updateStoreType(StoreTypeRequest storeTypeRequest);
     Optional<StoreType> findById(BigDecimal id);
-    public PaginationResponse<StoreTypeResponse> getStoreTypes(Pageable pageable, Map<String, String> parameter);
+    PaginationResponse<StoreTypeResponse> getStoreTypes(SearchRequestParamsDto request);
     StoreTypeResponse deleteStoreTypeById(BigDecimal id);
 }

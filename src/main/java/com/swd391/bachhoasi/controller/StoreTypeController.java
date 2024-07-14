@@ -35,7 +35,7 @@ public class StoreTypeController {
                 .search(query)
                 .wrapSort(pagination)
                 .build();
-        var result = storeTypeService.getStoreTypes(queryDto.pagination(),queryDto.search());
+        var result = storeTypeService.getStoreTypes(queryDto);
         return ResponseEntity.ok(
                 ResponseObject.builder()
                         .code("STORE_TYPE_GET_SUCCESS")
