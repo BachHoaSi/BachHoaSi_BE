@@ -2,6 +2,7 @@ package com.swd391.bachhoasi.service.impl;
 
 import com.swd391.bachhoasi.model.constant.OrderStatus;
 import com.swd391.bachhoasi.model.dto.request.NewOrderRequest;
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.OrderResponse;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ShipperResponseDto;
@@ -134,11 +135,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PaginationResponse<OrderResponse> getOrders(Pageable pagination, Map<String, String> parameter) {
-        if(parameter == null) parameter = new HashMap<>();
-        var parameterList = TextUtils.convertKeysToCamel(parameter);
+    public PaginationResponse<OrderResponse> getOrders(SearchRequestParamsDto request) {
+
         try {
-            Page<OrderResponse> orderPage = orderRepository.searchAnyByParameter(parameterList, pagination)
+            Page<OrderResponse> orderPage = orderRepository.searchAnyByParameter(request.search(), request.pagination())
                     .map(item -> OrderResponse.builder()
                             .orderId(item.getId())
                             .totalPrice(item.getGrandTotal())

@@ -59,3 +59,15 @@ access-token:
 refresh-token:
     max-age: ${REFRESH_TOKEN_EXT:315360000}
     secret-key: ${REFRESH_TOKEN_KEY}
+
+mail:
+       host: smtp.gmail.com
+       port: 587
+       username: ${EMAIL}
+       password: ${PASSWORD}
+       protocol: smtp
+       tls: true
+       properties.mail.smtp:
+           auth: true
+           starttls.enable: true
+           ssl.trust: smtp.gmail.com

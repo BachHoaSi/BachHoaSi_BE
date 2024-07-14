@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.service;
 
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.request.StoreTypeRequest;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.StoreTypeBasicResponse;
@@ -7,6 +8,7 @@ import com.swd391.bachhoasi.model.dto.response.StoreTypeResponse;
 import com.swd391.bachhoasi.model.entity.StoreType;
 import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Optional;
 
 public interface StoreTypeService {
@@ -14,6 +16,6 @@ public interface StoreTypeService {
     PaginationResponse<StoreTypeBasicResponse> getBasicAllStoreType();
     StoreTypeResponse updateStoreType(StoreTypeRequest storeTypeRequest);
     Optional<StoreType> findById(BigDecimal id);
-    PaginationResponse<StoreType> getStoreTypes(Pageable pagination, String keyword);
+    PaginationResponse<StoreTypeResponse> getStoreTypes(SearchRequestParamsDto request);
     StoreTypeResponse deleteStoreTypeById(BigDecimal id);
 }

@@ -50,7 +50,7 @@ public class OrderController {
                 .search(query)
                 .wrapSort(pagination)
                 .build();
-        var result = orderService.getOrders(queryDto.pagination(),queryDto.search());
+        var result = orderService.getOrders(queryDto);
         return ResponseEntity.ok(
                 ResponseObject.builder()
                         .code("ORDER_GET_SUCCESS")

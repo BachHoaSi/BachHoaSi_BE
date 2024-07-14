@@ -1,10 +1,10 @@
 package com.swd391.bachhoasi.controller;
 
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.request.StoreTypeRequest;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.model.dto.response.StoreTypeBasicResponse;
-import com.swd391.bachhoasi.model.entity.StoreType;
 import com.swd391.bachhoasi.service.StoreTypeService;
 import jakarta.validation.Valid;
 
@@ -29,17 +29,22 @@ public class StoreTypeController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> getAll(
             @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pagination,
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false, name = "q") String query
     ) {
-        PaginationResponse<StoreType> storeTypes= storeTypeService.getStoreTypes(pagination, keyword);
-        var responseObject = ResponseObject.builder()
-                .code("STORE_TYPE_GET_SUCCESS")
-                .message("Get store type successfully")
-                .status(HttpStatus.OK)
-                .isSuccess(true)
-                .data(storeTypes)
+        var queryDto = SearchRequestParamsDto.builder()
+                .search(query)
+                .wrapSort(pagination)
                 .build();
-        return ResponseEntity.ok().body(responseObject);
+        var result = storeTypeService.getStoreTypes(queryDto);
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("STORE_TYPE_GET_SUCCESS")
+                        .isSuccess(true)
+                        .data(result)
+                        .message("Get Store Type Success")
+                        .status(HttpStatus.OK)
+                        .build()
+        );
     }
     @GetMapping("all")
     public ResponseEntity<ResponseObject> getAllBasicStoreTypeInfo(

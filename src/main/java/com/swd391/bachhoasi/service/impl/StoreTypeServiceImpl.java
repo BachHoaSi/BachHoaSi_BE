@@ -1,19 +1,24 @@
 package com.swd391.bachhoasi.service.impl;
 
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.request.StoreTypeRequest;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.StoreTypeBasicResponse;
 import com.swd391.bachhoasi.model.dto.response.StoreTypeResponse;
 import com.swd391.bachhoasi.model.entity.StoreType;
+import com.swd391.bachhoasi.model.exception.ActionFailedException;
 import com.swd391.bachhoasi.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi.repository.StoreTypeRepository;
 import com.swd391.bachhoasi.service.StoreTypeService;
+import com.swd391.bachhoasi.util.TextUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -65,17 +70,21 @@ public class StoreTypeServiceImpl implements StoreTypeService {
     }
 
     @Override
-    public PaginationResponse<StoreType> getStoreTypes(Pageable pageable, String keyword) {
-        Page<StoreTypeResponse> storeTypeResponsePage = storeTypeRepository.findByNameOrDescription(keyword, pageable)
-                .map(item -> StoreTypeResponse.builder()
-                        .id(item.getId())
-                        .name(item.getName())
-                        .description(item.getDescription())
-                        .status(item.getStatus())
-                        .build());
-
-        return new PaginationResponse<>(convert(storeTypeResponsePage));
+    public PaginationResponse<StoreTypeResponse> getStoreTypes(SearchRequestParamsDto request) {
+        try {
+            Page<StoreTypeResponse> storeLevelPage = storeTypeRepository.searchAnyByParameter(request.search(), request.pagination())
+                    .map(item -> StoreTypeResponse.builder()
+                            .id(item.getId())
+                            .name(item.getName())
+                            .description(item.getDescription())
+                            .status(item.getStatus())
+                            .build());
+            return new PaginationResponse<>(storeLevelPage);
+        } catch (Exception ex ) {
+            throw new ActionFailedException(ex.getMessage(), "STORE_TYPE_GET_FAILED");
+        }
     }
+
     @Override
     public PaginationResponse<StoreTypeBasicResponse> getBasicAllStoreType() {
         var result = storeTypeRepository.findAll().stream().map(item -> StoreTypeBasicResponse.builder()
