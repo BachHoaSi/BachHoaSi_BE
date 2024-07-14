@@ -50,4 +50,5 @@ public class AuthServiceImpl implements AuthService {
             throw new AuthFailedException("Refresh token isn't valid, please try again");
         }
     }
+
 }

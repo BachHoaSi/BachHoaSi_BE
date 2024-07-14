@@ -53,6 +53,6 @@ public class AuthController {
             .headers(AuthUtils.getAuthenticationHeader(jwtAuthResponse))
             .body(responseObject);
     }
-    
+
 
 }

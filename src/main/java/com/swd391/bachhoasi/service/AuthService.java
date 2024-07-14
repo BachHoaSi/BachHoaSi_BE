@@ -8,4 +8,5 @@ import org.springframework.stereotype.Service;
 public interface AuthService {
     LoginResponse login(LoginDto loginDto);
     LoginResponse createAccessToken(String refreshToken);
+
 }

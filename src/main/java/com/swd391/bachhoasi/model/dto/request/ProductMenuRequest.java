@@ -12,6 +12,7 @@ import lombok.Data;
 public class ProductMenuRequest {
     @JsonProperty("product-id")
     private BigDecimal productId;
+    private BigDecimal menuId;
     private BigDecimal price;
     private Boolean status;
 }

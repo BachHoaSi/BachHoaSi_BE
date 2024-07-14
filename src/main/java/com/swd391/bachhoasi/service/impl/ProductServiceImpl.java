@@ -100,6 +100,16 @@ public class ProductServiceImpl implements ProductService {
         return mapToProductResponse(updatedProduct);
     }
 
+    @Override
+    public ProductResponse disableProduct(String code) {
+        Product product = productRepository.findByProductCode(code).orElseThrow(() -> new NotFoundException(String.format("Not found product with code: %s", code)));
+        if (!product.getStatus().booleanValue())
+            throw new ActionFailedException("Product is in disable");
+        product.setStatus(false);
+        Product updatedProduct = productRepository.save(product);
+        return mapToProductResponse(updatedProduct);
+    }
+
     public static ProductResponse mapToProductResponse(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())

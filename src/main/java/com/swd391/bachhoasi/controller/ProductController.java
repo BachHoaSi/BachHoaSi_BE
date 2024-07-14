@@ -87,4 +87,19 @@ public class ProductController {
         return ResponseEntity.ok().body(responseObject);
 
     }
+
+    @PatchMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseObject> disableProduct(@RequestParam("code") String code) {
+        ProductResponse productResponse = productService.disableProduct(code);
+        var responseObject = ResponseObject.builder()
+                .data(productResponse)
+                .code("PRODUCT_DISABLE_SUCCESS")
+                .message("Disable product successfully")
+                .status(HttpStatus.OK)
+                .isSuccess(true)
+                .build();
+        return ResponseEntity.ok().body(responseObject);
+
+    }
 }
