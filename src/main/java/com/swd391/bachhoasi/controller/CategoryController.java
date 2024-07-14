@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.swd391.bachhoasi.model.dto.request.CategoryRequest;
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.service.CategoryService;
 
@@ -45,7 +46,11 @@ public class CategoryController {
     
     @RequestParam(name = "q", required = false
     ) String query) {
-        var result = categoryService.getAllCategory();
+        var queryDto = SearchRequestParamsDto.builder()
+        .search(query)
+        .wrapSort(pageable)
+        .build();
+        var result = categoryService.getPaginationCategory(queryDto);
         return ResponseEntity.ok(
             ResponseObject.builder()
             .code("GET_CATEGORY_SUCCESS")

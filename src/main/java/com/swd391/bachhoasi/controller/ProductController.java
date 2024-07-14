@@ -31,7 +31,7 @@ public class ProductController {
             @RequestParam(required = false, name = "q") String query) {
         var queryDto = SearchRequestParamsDto.builder()
         .search(query)
-        .pageable(pagination)
+        .wrapSort(pagination)
         .build();
         PaginationResponse<ProductResponse> products = productService.getProducts(queryDto);
         var responseObject = ResponseObject.builder()
