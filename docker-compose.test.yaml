@@ -22,6 +22,8 @@ services:
       ORIGIN_ALLOWED: ${ORIGIN_ALLOWED}
       BUCKET: ${BUCKET}
       GG_CREDENTIAL_JSON: ${GG_CREDENTIAL_JSON}
+      EMAIL: ${SEND_EMAIL}
+      PASSWORD: ${SEND_PASSWORD}
     networks:
       - bachhoasi-networks
 

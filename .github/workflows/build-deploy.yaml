@@ -57,6 +57,9 @@ jobs:
       GG_CREDENTIAL_JSON: ${{secrets.GG_CREDENTIAL_JSON}}
       BUCKET: ${{secrets.BUCKET}}
 
+      SEND_EMAIL: ${{secrets.SEND_EMAIL}}
+      SEND_PASSWORD: ${{secrets.SEND_PASSWORD}}
+      
       DOCKER_USERNAME: ${{ secrets.REGISTRY_NAME }}
     steps:
     - name: Checkout Develop
