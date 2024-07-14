@@ -7,6 +7,7 @@ import com.swd391.bachhoasi.model.dto.response.StoreTypeResponse;
 import com.swd391.bachhoasi.model.entity.StoreType;
 import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Optional;
 
 public interface StoreTypeService {
@@ -14,6 +15,6 @@ public interface StoreTypeService {
     PaginationResponse<StoreTypeBasicResponse> getBasicAllStoreType();
     StoreTypeResponse updateStoreType(StoreTypeRequest storeTypeRequest);
     Optional<StoreType> findById(BigDecimal id);
-    PaginationResponse<StoreType> getStoreTypes(Pageable pagination, String keyword);
+    public PaginationResponse<StoreTypeResponse> getStoreTypes(Pageable pageable, Map<String, String> parameter);
     StoreTypeResponse deleteStoreTypeById(BigDecimal id);
 }

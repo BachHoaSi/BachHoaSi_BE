@@ -1,5 +1,7 @@
 package com.swd391.bachhoasi.controller;
 
+import com.swd391.bachhoasi.model.dto.request.StoreRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
@@ -8,14 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.request.StoreReviewRequest;
@@ -77,6 +73,21 @@ public class StoreController {
             .status(HttpStatus.OK)
             .message("Disable Success")
             .build()
+        );
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("")
+    public ResponseEntity<ResponseObject> updateStore(@RequestBody @Valid StoreRequest storeRequest) {
+        var result = storeService.updateStore(storeRequest);
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("STORE_UPDATE_SUCCESS")
+                        .isSuccess(true)
+                        .status(HttpStatus.OK)
+                        .data(result)
+                        .message("Update store success")
+                        .build()
         );
     }
 }

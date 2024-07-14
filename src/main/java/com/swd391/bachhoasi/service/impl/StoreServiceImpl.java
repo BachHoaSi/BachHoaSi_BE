@@ -1,5 +1,10 @@
 package com.swd391.bachhoasi.service.impl;
 
+import com.swd391.bachhoasi.model.dto.request.StoreRequest;
+import com.swd391.bachhoasi.model.entity.StoreType;
+import com.swd391.bachhoasi.repository.StoreLevelRepository;
+import com.swd391.bachhoasi.repository.StoreTypeRepository;
+import com.swd391.bachhoasi.service.StoreLevelService;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
@@ -20,6 +25,8 @@ import com.swd391.bachhoasi.service.StoreService;
 @RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService{
     private final StoreRepository storeRepository;
+    private final StoreLevelRepository storeLevelRepository;
+    private final StoreTypeRepository storeTypeRepository;
 
     @Override
     public PaginationResponse<StoreResponseDto> getAllStore(SearchRequestParamsDto request) {
@@ -37,6 +44,35 @@ public class StoreServiceImpl implements StoreService{
             .build();
         });
         return new PaginationResponse<>(result);
+    }
+
+    @Override
+    public StoreResponseDto updateStore(StoreRequest storeRequest) {
+        if (storeRequest == null)
+            throw new ValidationFailedException("Store Request is null, please provide a valid request");
+        var storeLevel = storeLevelRepository.findById(storeRequest.getStoreLevelId());
+        var storeType = storeTypeRepository.findById(storeRequest.getStoreTypeId());
+        if (storeLevel.isEmpty() || storeType.isEmpty())
+            throw new ValidationFailedException("Store level or type is null, please provide a valid request");
+        try {
+            var store = storeRepository.findById(storeRequest.getStoreTypeId()).get();
+            store.setName(storeRequest.getName());
+            store.setStoreLevel(storeLevel.get());
+            store.setType(storeType.get());
+            store.setZaloId(storeRequest.getZaloId());
+            store.setPhoneNumber(storeRequest.getPhoneNumber());
+            store.setStatus(store.getStatus());
+
+            Store updatedStore = storeRepository.save(store);
+            return StoreResponseDto.builder()
+                    .name(updatedStore.getName())
+                    .storeLevel(updatedStore.getStoreLevel().getLevel())
+                    .type(updatedStore.getType().getName())
+                    .status(updatedStore.getStatus())
+                    .build();
+        }catch (Exception e) {
+            throw new ValidationFailedException("Cannot update store, please check again !!!");
+        }
     }
 
     public StoreResponseDto updateStoreRegisterReview(BigDecimal id, StoreStatus status) {
