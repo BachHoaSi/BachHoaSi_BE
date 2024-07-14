@@ -2,6 +2,7 @@ package com.swd391.bachhoasi.service.impl;
 
 import com.swd391.bachhoasi.model.dto.request.StoreTypeRequest;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
+import com.swd391.bachhoasi.model.dto.response.StoreTypeBasicResponse;
 import com.swd391.bachhoasi.model.dto.response.StoreTypeResponse;
 import com.swd391.bachhoasi.model.entity.StoreType;
 import com.swd391.bachhoasi.model.exception.ValidationFailedException;
@@ -12,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -21,10 +21,10 @@ import java.util.Optional;
 public class StoreTypeServiceImpl implements StoreTypeService {
     private final StoreTypeRepository storeTypeRepository;
 
-
     @Override
     public StoreTypeResponse createNewStoreType(StoreTypeRequest storeTypeRequest) {
-        if(storeTypeRequest == null) throw new ValidationFailedException("Store type request is null, please check again !!!");
+        if (storeTypeRequest == null)
+            throw new ValidationFailedException("Store type request is null, please check again !!!");
         StoreType storeTypeEntity = StoreType.builder()
                 .name(storeTypeRequest.getName())
                 .description(storeTypeRequest.getDescription())
@@ -75,7 +75,14 @@ public class StoreTypeServiceImpl implements StoreTypeService {
                         .build());
 
         return new PaginationResponse<>(convert(storeTypeResponsePage));
-
+    }
+    @Override
+    public PaginationResponse<StoreTypeBasicResponse> getBasicAllStoreType() {
+        var result = storeTypeRepository.findAll().stream().map(item -> StoreTypeBasicResponse.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .build()).toList();
+        return new PaginationResponse<>(result);
     }
 
     @Override

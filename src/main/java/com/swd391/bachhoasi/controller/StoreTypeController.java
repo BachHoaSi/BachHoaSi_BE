@@ -3,6 +3,7 @@ package com.swd391.bachhoasi.controller;
 import com.swd391.bachhoasi.model.dto.request.StoreTypeRequest;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
+import com.swd391.bachhoasi.model.dto.response.StoreTypeBasicResponse;
 import com.swd391.bachhoasi.model.entity.StoreType;
 import com.swd391.bachhoasi.service.StoreTypeService;
 import jakarta.validation.Valid;
@@ -31,6 +32,19 @@ public class StoreTypeController {
             @RequestParam(required = false) String keyword
     ) {
         PaginationResponse<StoreType> storeTypes= storeTypeService.getStoreTypes(pagination, keyword);
+        var responseObject = ResponseObject.builder()
+                .code("STORE_TYPE_GET_SUCCESS")
+                .message("Get store type successfully")
+                .status(HttpStatus.OK)
+                .isSuccess(true)
+                .data(storeTypes)
+                .build();
+        return ResponseEntity.ok().body(responseObject);
+    }
+    @GetMapping("all")
+    public ResponseEntity<ResponseObject> getAllBasicStoreTypeInfo(
+    ) {
+        PaginationResponse<StoreTypeBasicResponse> storeTypes= storeTypeService.getBasicAllStoreType();
         var responseObject = ResponseObject.builder()
                 .code("STORE_TYPE_GET_SUCCESS")
                 .message("Get store type successfully")
