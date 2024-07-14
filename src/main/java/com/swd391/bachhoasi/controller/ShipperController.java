@@ -2,15 +2,13 @@ package com.swd391.bachhoasi.controller;
 
 import java.math.BigDecimal;
 
+import jakarta.mail.MessagingException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
@@ -26,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class ShipperController {
     private final ShipperService shipperService;
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     public ResponseEntity<ResponseObject> getShippers (
         @PageableDefault(page = 0, size = 10, sort = "id") 
@@ -47,6 +46,8 @@ public class ShipperController {
         return ResponseEntity.ok().body(responseObject);
     }
 
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getShipperOne(@PathVariable BigDecimal id) {
         var result = shipperService.getShipperDetail(id);
@@ -74,4 +75,20 @@ public class ShipperController {
                         .build()
         );
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PatchMapping
+    public ResponseEntity<ResponseObject> sendResetPassoword(@RequestParam BigDecimal id) throws MessagingException {
+        var result = shipperService.resetPassword(id);
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("GET_SHIPPER_SUCCESS")
+                        .isSuccess(true)
+                        .data(result)
+                        .message("Get Shipper Success")
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+
 }

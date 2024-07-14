@@ -49,6 +49,7 @@ public class StoreController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> disableStore(@PathVariable(value = "id") BigDecimal id) {
         var result = storeService.disableStore(id);
         return ResponseEntity.ok(
@@ -63,6 +64,7 @@ public class StoreController {
     }
     @Operation(summary = "Update store review status", description = "Updates the review status of a store")
     @PatchMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> updateStoreReviewStatus(@Schema @RequestBody StoreReviewRequest request) {
         var result = storeService.updateStoreRegisterReview(request.id(), request.status());
         return ResponseEntity.ok(
@@ -77,7 +79,7 @@ public class StoreController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("")
+    @PutMapping
     public ResponseEntity<ResponseObject> updateStore(@RequestBody @Valid StoreRequest storeRequest) {
         var result = storeService.updateStore(storeRequest);
         return ResponseEntity.ok(
