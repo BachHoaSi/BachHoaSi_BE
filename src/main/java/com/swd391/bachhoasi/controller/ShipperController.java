@@ -2,6 +2,7 @@ package com.swd391.bachhoasi.controller;
 
 import java.math.BigDecimal;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.mail.MessagingException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -76,8 +77,9 @@ public class ShipperController {
         );
     }
 
+    @Operation(summary = "Rest Password", description = "Reset password by give shipper id, system will send new password to shipper email")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PatchMapping
+    @PatchMapping("reset-password")
     public ResponseEntity<ResponseObject> sendResetPassoword(@RequestParam BigDecimal id) throws MessagingException {
         var result = shipperService.resetPassword(id);
         return ResponseEntity.ok(
