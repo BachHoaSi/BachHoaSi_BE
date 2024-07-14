@@ -19,7 +19,6 @@ public class StoreRequest {
     private BigDecimal storeLevelId;
     private BigDecimal storeTypeId;
     private String name;
-    private String zaloId;
     private String phoneNumber;
     private StoreStatus storeStatus;
 }

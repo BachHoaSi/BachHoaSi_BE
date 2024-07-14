@@ -82,10 +82,10 @@ public class ShipperController {
         var result = shipperService.resetPassword(id);
         return ResponseEntity.ok(
                 ResponseObject.builder()
-                        .code("GET_SHIPPER_SUCCESS")
+                        .code("RESET_PASSWORD_SUCCESS")
                         .isSuccess(true)
                         .data(result)
-                        .message("Get Shipper Success")
+                        .message("Rest Password Success")
                         .status(HttpStatus.OK)
                         .build()
         );

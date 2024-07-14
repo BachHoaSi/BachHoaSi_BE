@@ -2,6 +2,7 @@ package com.swd391.bachhoasi.service.impl;
 
 import com.swd391.bachhoasi.model.dto.request.StoreRequest;
 import com.swd391.bachhoasi.model.entity.StoreType;
+import com.swd391.bachhoasi.model.exception.ActionFailedException;
 import com.swd391.bachhoasi.repository.StoreLevelRepository;
 import com.swd391.bachhoasi.repository.StoreTypeRepository;
 import com.swd391.bachhoasi.service.StoreLevelService;
@@ -59,7 +60,6 @@ public class StoreServiceImpl implements StoreService{
             store.setName(storeRequest.getName());
             store.setStoreLevel(storeLevel.get());
             store.setType(storeType.get());
-            store.setZaloId(storeRequest.getZaloId());
             store.setPhoneNumber(storeRequest.getPhoneNumber());
             store.setStatus(store.getStatus());
 
@@ -71,7 +71,7 @@ public class StoreServiceImpl implements StoreService{
                     .status(updatedStore.getStatus())
                     .build();
         }catch (Exception e) {
-            throw new ValidationFailedException("Cannot update store, please check again !!!");
+            throw new ActionFailedException("Cannot update store, please check again !!!");
         }
     }
 
