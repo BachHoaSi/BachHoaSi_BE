@@ -29,13 +29,7 @@ public class AdminServiceImpl implements AdminService {
 
     public PaginationResponse<AdminResponse> getAllAdmin(SearchRequestParamsDto search) {
         var dbResult = adminRepository.searchAnyByParameter(search.search(), search.pagination())
-                .map(item -> AdminResponse.builder()
-                        .id(item.getId())
-                        .fullName(item.getFullName())
-                        .isActive(item.getIsActive())
-                        .isLocked(item.getIsLocked())
-                        .role(item.getRole().toString())
-                        .build());
+                .map(this::convertToDto);
         return new PaginationResponse<>(dbResult);
     }
 
@@ -140,6 +134,7 @@ public class AdminServiceImpl implements AdminService {
     private AdminResponse convertToDto(Admin item) {
         return AdminResponse.builder()
                 .id(item.getId())
+                .username(item.getUsername())
                 .fullName(item.getFullName())
                 .isActive(item.getIsActive())
                 .isLocked(item.getIsLocked())
