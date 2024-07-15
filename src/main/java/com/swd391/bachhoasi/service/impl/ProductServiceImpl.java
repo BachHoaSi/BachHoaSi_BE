@@ -62,6 +62,7 @@ public class ProductServiceImpl implements ProductService {
                 .createdDate(new Date(System.currentTimeMillis()))
                 .lastImportDate(new Date(System.currentTimeMillis()))
                 .category(category.get())
+                .status(true)
                 .build();
         Product savedProduct = productRepository.save(newProduct);
         return mapToProductResponse(savedProduct);
