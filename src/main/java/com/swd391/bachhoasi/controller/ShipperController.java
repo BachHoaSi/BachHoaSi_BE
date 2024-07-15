@@ -110,4 +110,18 @@ public class ShipperController {
         return ResponseEntity.ok(responseObject);
     }
 
+    @Operation(summary = "Update shipper")
+    @PutMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public ResponseEntity<ResponseObject> updateShipper (@PathVariable(name = "id") BigDecimal id, @RequestBody ShipperRequest request) {
+        var result = shipperService.updateUser(id,request);
+        var responseObject = ResponseObject
+                .builder()
+                .code("UPDATE_SHIPPER_SUCCESS")
+                .message("Update Shipper Successfully")
+                .isSuccess(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok(responseObject);
+    }
 }

@@ -206,6 +206,28 @@ public class ShipperServiceImpl implements ShipperService {
         }
     }
 
+    @Override
+    public ShipperResponseDto updateUser(BigDecimal id, ShipperRequest shipperRequest) {
+        var userDb = shipperRepository.findById(id).orElseThrow(() -> new NotFoundException(
+                String.format("Can't found shipper with id: %s", id.toString())));
+        Shipper shipper = userDb;
+        shipper.setName(shipperRequest.getName());
+        shipper.setPhone(shipperRequest.getPhone());
+        shipper.setLicenseNumber(shipperRequest.getLicenseNumber());
+        shipper.setLicenseIssueDate(shipperRequest.getLicenseIssueDate());
+        shipper.setIdCardNumber(shipperRequest.getIdCardNumber());
+        shipper.setIdCardIssueDate(shipperRequest.getIdCardIssueDate());
+        shipper.setIdCardIssuePlace(shipperRequest.getIdCardIssuePlace());
+        shipper.setVehicleType(shipperRequest.getVehicleType());
+        try {
+            shipper = shipperRepository.save(shipper);
+            return getShipperDetail(shipper.getId());
+        } catch (Exception ex) {
+            throw new ActionFailedException(
+                    String.format("Username duplicated or something else error: %s", ex.getMessage()));
+        }
+    }
+
     private ShipperResponseDto convertToDto(Shipper item) {
         return ShipperResponseDto.builder()
                 .id(item.getId())
