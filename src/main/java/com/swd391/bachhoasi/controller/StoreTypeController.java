@@ -75,12 +75,14 @@ public class StoreTypeController {
         );
     }
 
-    @PutMapping
+    @PutMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseObject> updateStoreType(@RequestBody @Valid StoreTypeRequest storeType
+    public ResponseEntity<ResponseObject> updateStoreType(
+        @PathVariable(name = "id") BigDecimal id,
+        @RequestBody @Valid StoreTypeRequest storeType
     ){
 
-            storeTypeService.updateStoreType(storeType);
+            storeTypeService.updateStoreType(id, storeType);
             return ResponseEntity.ok().build();
 
     }
