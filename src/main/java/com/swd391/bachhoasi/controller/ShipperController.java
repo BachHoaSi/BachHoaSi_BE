@@ -2,6 +2,8 @@ package com.swd391.bachhoasi.controller;
 
 import java.math.BigDecimal;
 
+import com.swd391.bachhoasi.model.dto.request.AdminRequest;
+import com.swd391.bachhoasi.model.dto.request.ShipperRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.mail.MessagingException;
 import org.springframework.data.domain.Pageable;
@@ -91,6 +93,21 @@ public class ShipperController {
                         .status(HttpStatus.OK)
                         .build()
         );
+    }
+
+    @Operation(summary = "Register new shipper", description = "Register new shipper, system will send password to shipper email")
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public ResponseEntity<ResponseObject> importNewAdmin(@RequestBody ShipperRequest shipperRequest) throws MessagingException {
+        var result = shipperService.registerNewShipper(shipperRequest);
+        var responseObject = ResponseObject
+                .builder()
+                .code("ADD_SHIPPER_SUCCESS")
+                .message("Add shipper Successfully")
+                .isSuccess(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok(responseObject);
     }
 
 }

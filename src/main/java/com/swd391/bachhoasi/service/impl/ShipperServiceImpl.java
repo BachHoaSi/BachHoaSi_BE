@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 
+import com.swd391.bachhoasi.model.dto.request.ShipperRequest;
 import com.swd391.bachhoasi.model.dto.response.AdminResponse;
 import com.swd391.bachhoasi.model.entity.Admin;
 import com.swd391.bachhoasi.model.exception.ActionFailedException;
@@ -162,13 +163,49 @@ public class ShipperServiceImpl implements ShipperService {
             shipperEntity.setHashPassword(hashPass);
             try {
                 var dbResult = shipperRepository.save(shipperEntity);
-                return convertToDto(dbResult);
+                return getShipperDetail(dbResult.getId());
             }catch (Exception ex) {
                 throw new ActionFailedException(
                         String.format("Something happen when reset password: %s", ex.getMessage()));
             }
 
     }
+
+    @Override
+    public ShipperResponseDto registerNewShipper(ShipperRequest shipperRequest) throws MessagingException {
+        var shipper = new Shipper();
+        shipper.setName(shipperRequest.getName());
+        shipper.setPhone(shipperRequest.getPhone());
+        shipper.setLicenseNumber(shipperRequest.getLicenseNumber());
+        shipper.setLicenseIssueDate(shipperRequest.getLicenseIssueDate());
+        shipper.setIdCardNumber(shipperRequest.getIdCardNumber());
+        shipper.setIdCardIssueDate(shipperRequest.getIdCardIssueDate());
+        shipper.setIdCardIssuePlace(shipperRequest.getIdCardIssuePlace());
+        shipper.setVehicleType(shipperRequest.getVehicleType());
+        shipper.setIsActive(true);
+        shipper.setIsLocked(false);
+        shipper.setEmail(shipperRequest.getEmail());
+        JavaMailSender javaMailSender = getJavaMailSender();
+        MimeMessage msg = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true, StandardCharsets.UTF_8.name());
+        String password = BaseUtils.generatePassword(12);
+
+        helper.setFrom(email);
+        helper.setTo(shipperRequest.getEmail());
+        helper.setSubject("SEND RESET PASSWORD");
+        helper.setText(password);
+        javaMailSender.send(msg);
+        var hashPass = passwordEncoder.encode(password);
+        shipper.setHashPassword(hashPass);
+        try {
+            var dbResult = shipperRepository.save(shipper);
+            return convertToDto(dbResult);
+        } catch (Exception ex) {
+            throw new ActionFailedException(
+                    String.format("Something happen when adding new shipper to system: %s", ex.getMessage()));
+        }
+    }
+
     private ShipperResponseDto convertToDto(Shipper item) {
         return ShipperResponseDto.builder()
                 .id(item.getId())
