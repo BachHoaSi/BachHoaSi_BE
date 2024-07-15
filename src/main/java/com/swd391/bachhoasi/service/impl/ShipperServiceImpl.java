@@ -6,10 +6,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 
+import com.swd391.bachhoasi.model.dto.request.AdminRequest;
 import com.swd391.bachhoasi.model.dto.request.ShipperRequest;
 import com.swd391.bachhoasi.model.dto.response.AdminResponse;
 import com.swd391.bachhoasi.model.entity.Admin;
 import com.swd391.bachhoasi.model.exception.ActionFailedException;
+import com.swd391.bachhoasi.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi.util.AuthUtils;
 import com.swd391.bachhoasi.util.BaseUtils;
 import com.swd391.bachhoasi.util.PasswordGenerator;
@@ -173,17 +175,18 @@ public class ShipperServiceImpl implements ShipperService {
 
     @Override
     public ShipperResponseDto registerNewShipper(ShipperRequest shipperRequest) throws MessagingException {
-        var shipper = new Shipper();
-        shipper.setName(shipperRequest.getName());
-        shipper.setPhone(shipperRequest.getPhone());
-        shipper.setLicenseNumber(shipperRequest.getLicenseNumber());
-        shipper.setLicenseIssueDate(shipperRequest.getLicenseIssueDate());
-        shipper.setIdCardNumber(shipperRequest.getIdCardNumber());
-        shipper.setIdCardIssueDate(shipperRequest.getIdCardIssueDate());
-        shipper.setIdCardIssuePlace(shipperRequest.getIdCardIssuePlace());
-        shipper.setVehicleType(shipperRequest.getVehicleType());
-        shipper.setIsActive(true);
-        shipper.setIsLocked(false);
+        Shipper shipper = Shipper.builder()
+                .name(shipperRequest.getName())
+                .phone(shipperRequest.getPhone())
+                .licenseNumber(shipperRequest.getLicenseNumber())
+                .licenseIssueDate(shipperRequest.getLicenseIssueDate())
+                .idCardNumber(shipperRequest.getIdCardNumber())
+                .idCardIssueDate(shipperRequest.getIdCardIssueDate())
+                .idCardIssuePlace(shipperRequest.getIdCardIssuePlace())
+                .vehicleType(shipperRequest.getVehicleType())
+                .isActive(true)
+                .isLocked(false)
+                .build();;
         shipper.setEmail(shipperRequest.getEmail());
         JavaMailSender javaMailSender = getJavaMailSender();
         MimeMessage msg = javaMailSender.createMimeMessage();
@@ -208,20 +211,13 @@ public class ShipperServiceImpl implements ShipperService {
 
     @Override
     public ShipperResponseDto updateUser(BigDecimal id, ShipperRequest shipperRequest) {
-        var userDb = shipperRepository.findById(id).orElseThrow(() -> new NotFoundException(
+        Shipper userDb = shipperRepository.findById(id).orElseThrow(() -> new NotFoundException(
                 String.format("Can't found shipper with id: %s", id.toString())));
-        Shipper shipper = userDb;
-        shipper.setName(shipperRequest.getName());
-        shipper.setPhone(shipperRequest.getPhone());
-        shipper.setLicenseNumber(shipperRequest.getLicenseNumber());
-        shipper.setLicenseIssueDate(shipperRequest.getLicenseIssueDate());
-        shipper.setIdCardNumber(shipperRequest.getIdCardNumber());
-        shipper.setIdCardIssueDate(shipperRequest.getIdCardIssueDate());
-        shipper.setIdCardIssuePlace(shipperRequest.getIdCardIssuePlace());
-        shipper.setVehicleType(shipperRequest.getVehicleType());
+
+        Shipper updateEntity = addUpdateFieldToAdminEntity(shipperRequest, userDb);
         try {
-            shipper = shipperRepository.save(shipper);
-            return getShipperDetail(shipper.getId());
+            updateEntity = shipperRepository.save(updateEntity);
+            return convertToDto(updateEntity);
         } catch (Exception ex) {
             throw new ActionFailedException(
                     String.format("Username duplicated or something else error: %s", ex.getMessage()));
@@ -236,5 +232,22 @@ public class ShipperServiceImpl implements ShipperService {
                 .isActive(item.getIsActive())
                 .isLocked(item.getIsLocked())
                 .build();
+    }
+
+    private Shipper addUpdateFieldToAdminEntity(ShipperRequest request, Shipper shipperEntity) {
+        if (shipperEntity == null || request == null) {
+            throw new ValidationFailedException(
+                    "Request or Admin entity is null on function::addUpdateFieldToAdminEntity");
+        }
+        shipperEntity.setName(request.getName());
+        shipperEntity.setPhone(request.getPhone());
+        shipperEntity.setLicenseNumber(request.getLicenseNumber());
+        shipperEntity.setLicenseIssueDate(request.getLicenseIssueDate());
+        shipperEntity.setIdCardNumber(request.getIdCardNumber());
+        shipperEntity.setIdCardIssuePlace(request.getIdCardIssuePlace());
+        shipperEntity.setLicenseIssueDate(request.getLicenseIssueDate());
+        shipperEntity.setVehicleType(request.getVehicleType());
+
+        return shipperEntity;
     }
 }
