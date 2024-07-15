@@ -10,15 +10,11 @@ import com.swd391.bachhoasi.model.exception.ActionFailedException;
 import com.swd391.bachhoasi.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi.repository.StoreTypeRepository;
 import com.swd391.bachhoasi.service.StoreTypeService;
-import com.swd391.bachhoasi.util.TextUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -36,15 +32,15 @@ public class StoreTypeServiceImpl implements StoreTypeService {
                 .status(storeTypeRequest.getStatus())
                 .build();
         StoreType result = storeTypeRepository.save(storeTypeEntity);
-        return mapToStoreTypeRespone(result);
+        return mapToStoreTypeResponse(result);
     }
 
     @Override
-    public StoreTypeResponse updateStoreType(StoreTypeRequest storeTypeRequest) {
+    public StoreTypeResponse updateStoreType(BigDecimal id, StoreTypeRequest storeTypeRequest) {
         if (storeTypeRequest == null) {
             throw new ValidationFailedException("Store type id request is null, please check again !!!");
         }
-        Optional<StoreType> storeTypeOptional = storeTypeRepository.findById(storeTypeRequest.getId());
+        Optional<StoreType> storeTypeOptional = storeTypeRepository.findById(id);
         if (storeTypeOptional.isEmpty()) {
             throw new ValidationFailedException("Store type not found, please check again !!!");
         }
@@ -56,9 +52,9 @@ public class StoreTypeServiceImpl implements StoreTypeService {
 
         try {
             StoreType updatedStoreType = storeTypeRepository.save(storeTypeEntity);
-            return mapToStoreTypeRespone(updatedStoreType);
+            return mapToStoreTypeResponse(updatedStoreType);
         } catch (Exception e) {
-            throw new ValidationFailedException("Cannot update storeType, please check again !!!");
+            throw new ActionFailedException("Cannot update storeType, please check again !!!");
         }
     }
 
@@ -109,13 +105,13 @@ public class StoreTypeServiceImpl implements StoreTypeService {
 
         try {
             StoreType deleteStoreType = storeTypeRepository.save(storeTypeEntity);
-            return mapToStoreTypeRespone(deleteStoreType);
+            return mapToStoreTypeResponse(deleteStoreType);
         } catch (Exception e) {
             throw new ValidationFailedException("Cannot update storeType, please check again !!!");
         }
     }
 
-    public StoreTypeResponse mapToStoreTypeRespone(StoreType storeType) {
+    public StoreTypeResponse mapToStoreTypeResponse(StoreType storeType) {
         return StoreTypeResponse.builder()
                 .name(storeType.getName())
                 .description(storeType.getDescription())
