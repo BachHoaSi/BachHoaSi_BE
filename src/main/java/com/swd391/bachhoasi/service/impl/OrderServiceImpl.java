@@ -13,10 +13,8 @@ import com.swd391.bachhoasi.repository.*;
 import com.swd391.bachhoasi.service.OrderService;
 import com.swd391.bachhoasi.service.ShipperService;
 import com.swd391.bachhoasi.util.AuthUtils;
-import com.swd391.bachhoasi.util.TextUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -80,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
         for(Map.Entry<BigDecimal,Integer> entry : orderItems.entrySet()){
             BigDecimal productId = entry.getKey();
             if (!productRepository.findById(productId).get().getStatus().booleanValue()){
-                throw new ActionFailedException(productRepository.findById(productId).get().getName() + " not availble");
+                throw new ActionFailedException(productRepository.findById(productId).get().getName() + " not available");
             }
             if (productRepository.findById(productId).get().getStockQuantity() < entry.getValue()){
                 throw new ActionFailedException(productRepository.findById(productId).get().getName() + " is not enough");
