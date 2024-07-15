@@ -6,6 +6,9 @@ import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.service.ProductMenuService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.math.BigDecimal;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,8 +21,8 @@ public class ProductMenuController {
     private final ProductMenuService productMenuService;
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseObject> updateProduct(@RequestBody @Valid ProductMenuRequest productMenuRequest) {
-        ProductMenuDetail productMenuResponse = productMenuService.updateProductMenu(productMenuRequest);
+    public ResponseEntity<ResponseObject> updateProduct(BigDecimal menuId, @RequestBody @Valid ProductMenuRequest productMenuRequest) {
+        ProductMenuDetail productMenuResponse = productMenuService.updateProductMenu(menuId,productMenuRequest);
         var responseObject = ResponseObject.builder()
                 .data(productMenuResponse)
                 .code("PRODUCT_MENU_UPDATE_SUCCESS")
@@ -32,8 +35,8 @@ public class ProductMenuController {
     }
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('STAFF')")
-    public ResponseEntity<ResponseObject> importProductMenu(@RequestBody @Valid ProductMenuRequest productMenuRequest) {
-        ProductMenuDetail productMenuResponse = productMenuService.addProductMenu(productMenuRequest);
+    public ResponseEntity<ResponseObject> importProductMenu(BigDecimal menuId,@RequestBody @Valid ProductMenuRequest productMenuRequest) {
+        ProductMenuDetail productMenuResponse = productMenuService.addProductMenu(menuId,productMenuRequest);
         var responseObject = ResponseObject.builder()
                 .data(productMenuResponse)
                 .code("PRODUCT_MENU_ADD_SUCCESS")

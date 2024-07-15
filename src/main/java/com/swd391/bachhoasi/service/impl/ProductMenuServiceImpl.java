@@ -16,6 +16,7 @@ import com.swd391.bachhoasi.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Service
@@ -26,11 +27,11 @@ public class ProductMenuServiceImpl implements ProductMenuService {
     private final MenuRepository menuRepository;
     private final AuthUtils authUtils;
     @Override
-    public ProductMenuDetail updateProductMenu(ProductMenuRequest productMenuRequest) {
+    public ProductMenuDetail updateProductMenu(BigDecimal menuId, ProductMenuRequest productMenuRequest) {
         if (productMenuRequest == null)
             throw new NotFoundException("ProductMenu request is null");
         var productMenuId = new ProductMenuId();
-        productMenuId.setMenu(menuRepository.findById(productMenuRequest.getMenuId()).orElseThrow(() -> new NotFoundException("menu not found")));
+        productMenuId.setMenu(menuRepository.findById(menuId).orElseThrow(() -> new NotFoundException("Menu not found")));
         productMenuId.setProduct(productRepository.findById(productMenuRequest.getProductId()).orElseThrow(() -> new NotFoundException("product not found")));
         var productMenu = productMenuRepository.findById(productMenuId).orElseThrow(() -> new NotFoundException("Product menu not found"));
         productMenu.setStatus(productMenuRequest.getStatus());
@@ -46,11 +47,11 @@ public class ProductMenuServiceImpl implements ProductMenuService {
                 .build();
     }
     @Override
-    public ProductMenuDetail addProductMenu(ProductMenuRequest productMenuRequest) {
+    public ProductMenuDetail addProductMenu(BigDecimal menuId, ProductMenuRequest productMenuRequest) {
         if (productMenuRequest == null)
             throw new NotFoundException("ProductMenu request is null");
         var productMenuId = new ProductMenuId();
-        productMenuId.setMenu(menuRepository.findById(productMenuRequest.getMenuId()).orElseThrow(() -> new NotFoundException("Menu not found")));
+        productMenuId.setMenu(menuRepository.findById(menuId).orElseThrow(() -> new NotFoundException("Menu not found")));
         productMenuId.setProduct(productRepository.findById(productMenuRequest.getProductId()).orElseThrow(() -> new NotFoundException("Product not found")));
         var productMenu = new ProductMenu();
         productMenu.setComposeId(productMenuId);
