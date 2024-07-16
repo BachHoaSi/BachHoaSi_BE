@@ -3,6 +3,8 @@ package com.swd391.bachhoasi.service.impl;
 import com.swd391.bachhoasi.model.constant.OrderStatus;
 import com.swd391.bachhoasi.model.dto.request.NewOrderRequest;
 import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
+import com.swd391.bachhoasi.model.dto.response.OrderDetailResponse;
+import com.swd391.bachhoasi.model.dto.response.OrderProductMenuResponse;
 import com.swd391.bachhoasi.model.dto.response.OrderResponse;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ShipperResponseDto;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +41,6 @@ public class OrderServiceImpl implements OrderService {
     private final ShipperService shipperService;
     private final ShipperRepository shipperRepository;
     private final ProductRepository productRepository;
-
     @Override
     public OrderResponse placeOrder(NewOrderRequest order) {
         Store store = storeRepository.findById(order.getStoreId()).orElseThrow(()-> new NotFoundException("Store not found"));
@@ -156,6 +158,41 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    public OrderDetailResponse getDetailOrder(BigDecimal orderId) {
+        var orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Not found this order"));
+        var orderContact = orderEntity.getOrderContact();
+        var orderProductList = orderEntity.getOrderProducts();
+        List<OrderProductMenuResponse> orderProductListResponse = Collections.emptyList();
+        if (orderProductList != null) {
+            orderProductListResponse = orderProductList.stream().map(item -> {
+                var productMenu = item.getProduct();
+                var product = productMenu.getComposeId().getProduct();
+                return OrderProductMenuResponse.builder()
+                .id(item.getId())
+                .quantity(item.getQuantity())
+                .productName(product.getName())
+                .url(product.getUrlImages())
+                .category(product.getCategory().getName())
+                .build();
+            }).toList();
+        }
+        return OrderDetailResponse.builder()
+            .orderId(orderId)
+            .storeName(orderContact.getCustomerName())
+            .orderStatus(orderEntity.getOrderStatus())
+            .total(orderEntity.getSubTotal())
+            .createdAt(orderEntity.getCreatedDate())
+            .deliveryTime(null)
+            .feedback(orderEntity.getOrderFeedback())
+            .orderContactId(orderContact.getId())
+            .buildingNumber(orderContact.getBuildingNumber())
+            .phoneNumber(orderContact.getPhoneNumber())
+            .street(orderContact.getStreet())
+            .paymentMethod(orderEntity.getPayingMethod())
+            .grandTotal(orderEntity.getGrandTotal())
+            .orderProductMenu(orderProductListResponse)
+        .build();
+    }
     @Override
     public OrderResponse acceptOrder(BigDecimal orderId) {
         var order = orderRepository.findById(orderId);

@@ -2,6 +2,7 @@ package com.swd391.bachhoasi.controller;
 
 import com.swd391.bachhoasi.model.dto.request.NewOrderRequest;
 import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
+import com.swd391.bachhoasi.model.dto.response.OrderDetailResponse;
 import com.swd391.bachhoasi.model.dto.response.OrderResponse;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.service.OrderService;
@@ -68,12 +69,24 @@ public class OrderController {
         OrderResponse orderResponse = orderService.acceptOrder(id);
         var responseObject = ResponseObject.builder()
                 .data(orderResponse)
-                .code("PRODUCT_DISABLE_SUCCESS")
+                .code("ORDER_ACCEPT_SUCCESS")
                 .message("Disable product successfully")
                 .status(HttpStatus.OK)
                 .isSuccess(true)
                 .build();
         return ResponseEntity.ok().body(responseObject);
 
+    }
+    @GetMapping("{orderId}")
+    public ResponseEntity<ResponseObject> getOrderDetail(@PathVariable(name = "orderId") BigDecimal orderId) {
+        OrderDetailResponse orderResponse = orderService.getDetailOrder(orderId);
+        var responseObject = ResponseObject.builder()
+                .data(orderResponse)
+                .code("GET_ORDER_DETAILED_SUCCESS")
+                .message("Get order detailed successfully")
+                .status(HttpStatus.OK)
+                .isSuccess(true)
+                .build();
+        return ResponseEntity.ok().body(responseObject);
     }
 }
