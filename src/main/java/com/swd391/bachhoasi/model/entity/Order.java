@@ -65,7 +65,7 @@ public class Order implements Serializable {
     @ManyToOne(targetEntity = Admin.class, optional = true)
     @JoinColumn(name = "AdminId")
     private Admin admin;
-    @OneToOne(targetEntity = OrderContact.class, optional = false, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToOne(targetEntity = OrderContact.class, fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private OrderContact orderContact;
     @OneToMany(targetEntity = OrderProductMenu.class,mappedBy = "order" , cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     private List<OrderProductMenu> orderProducts;
