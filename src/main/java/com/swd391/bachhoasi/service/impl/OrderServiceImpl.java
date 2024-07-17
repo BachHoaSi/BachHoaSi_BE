@@ -203,6 +203,7 @@ public class OrderServiceImpl implements OrderService {
         var acceptStatus = List.of(OrderStatus.ACCEPTED, OrderStatus.IN_TRANSIT, OrderStatus.PENDING, OrderStatus.PICKED_UP);
         if (acceptStatus.contains(orderStatus)) {
             orderResponse.setOrderStatus(OrderStatus.CANCELLED);
+            orderRepository.save(orderResponse);
         } else {
             throw new ValidationFailedException(String.format("Order can accepts when meet condition: %s", acceptStatus.toString()));
         }
