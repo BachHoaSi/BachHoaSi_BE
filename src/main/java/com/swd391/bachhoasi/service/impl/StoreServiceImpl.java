@@ -1,11 +1,9 @@
 package com.swd391.bachhoasi.service.impl;
 
 import com.swd391.bachhoasi.model.dto.request.StoreRequest;
-import com.swd391.bachhoasi.model.entity.StoreType;
 import com.swd391.bachhoasi.model.exception.ActionFailedException;
 import com.swd391.bachhoasi.repository.StoreLevelRepository;
 import com.swd391.bachhoasi.repository.StoreTypeRepository;
-import com.swd391.bachhoasi.service.StoreLevelService;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
