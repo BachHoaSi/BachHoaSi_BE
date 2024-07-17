@@ -2,6 +2,7 @@ package com.swd391.bachhoasi.model.dto.response;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.swd391.bachhoasi.model.constant.OrderStatus;
@@ -18,7 +19,7 @@ public class OrderDetailResponse {
     private OrderStatus orderStatus;
     private BigDecimal total;
     private Date createdAt;
-    private Date deliveryTime;
+    private LocalDateTime deliveryTime;
     private String feedback;
     // Destination Info
     private BigDecimal orderContactId;
