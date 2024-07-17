@@ -89,4 +89,17 @@ public class OrderController {
                 .build();
         return ResponseEntity.ok().body(responseObject);
     }
+
+    @PatchMapping("cancel/{orderId}")
+    public ResponseEntity<ResponseObject> cancelOrder(@PathVariable(name = "orderId") BigDecimal orderId) {
+        OrderResponse orderResponse = orderService.cancelOrder(orderId);
+        var responseObject = ResponseObject.builder()
+                .data(orderResponse)
+                .code("CANCEL_ORDER_SUCCESS")
+                .message("Cancel order successfully")
+                .status(HttpStatus.OK)
+                .isSuccess(true)
+                .build();
+        return ResponseEntity.ok().body(responseObject);
+    }
 }
