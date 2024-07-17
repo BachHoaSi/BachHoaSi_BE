@@ -14,4 +14,5 @@ public interface OrderService {
     PaginationResponse<OrderResponse> getOrders(SearchRequestParamsDto request);
     OrderDetailResponse getDetailOrder(BigDecimal orderId);
     public OrderResponse acceptOrder(BigDecimal orderId);
+    OrderResponse cancelOrder(BigDecimal orderId);
 }

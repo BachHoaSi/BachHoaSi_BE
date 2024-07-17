@@ -11,6 +11,7 @@ import com.swd391.bachhoasi.model.dto.response.ShipperResponseDto;
 import com.swd391.bachhoasi.model.entity.*;
 import com.swd391.bachhoasi.model.exception.ActionFailedException;
 import com.swd391.bachhoasi.model.exception.NotFoundException;
+import com.swd391.bachhoasi.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi.repository.*;
 import com.swd391.bachhoasi.service.OrderService;
 import com.swd391.bachhoasi.service.ShipperService;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -193,6 +195,18 @@ public class OrderServiceImpl implements OrderService {
             .grandTotal(orderEntity.getGrandTotal())
             .orderProductMenu(orderProductListResponse)
         .build();
+    }
+
+    public OrderResponse cancelOrder(BigDecimal orderId) {
+        var orderResponse = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Not found order with this ID"));
+        var orderStatus = orderResponse.getOrderStatus();
+        var acceptStatus = List.of(OrderStatus.ACCEPTED, OrderStatus.IN_TRANSIT, OrderStatus.PENDING, OrderStatus.PICKED_UP);
+        if (acceptStatus.contains(orderStatus)) {
+            orderResponse.setOrderStatus(OrderStatus.CANCELLED);
+        } else {
+            throw new ValidationFailedException(String.format("Order can accepts when meet condition: %s", acceptStatus.toString()));
+        }
+        return convertOrderToOrderResponse(orderResponse);
     }
     @Override
     public OrderResponse acceptOrder(BigDecimal orderId) {
