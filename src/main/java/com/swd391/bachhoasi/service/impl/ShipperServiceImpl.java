@@ -6,9 +6,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 
+import com.swd391.bachhoasi.model.dto.request.AdminRequest;
+import com.swd391.bachhoasi.model.dto.request.ShipperRequest;
 import com.swd391.bachhoasi.model.dto.response.AdminResponse;
 import com.swd391.bachhoasi.model.entity.Admin;
 import com.swd391.bachhoasi.model.exception.ActionFailedException;
+import com.swd391.bachhoasi.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi.util.AuthUtils;
 import com.swd391.bachhoasi.util.BaseUtils;
 import com.swd391.bachhoasi.util.PasswordGenerator;
@@ -163,7 +166,7 @@ public class ShipperServiceImpl implements ShipperService {
             shipperEntity.setHashPassword(hashPass);
             try {
                 var dbResult = shipperRepository.save(shipperEntity);
-                return convertToDto(dbResult);
+                return getShipperDetail(dbResult.getId());
             }catch (Exception ex) {
                 throw new ActionFailedException(
                         String.format("Something happen when reset password: %s", ex.getMessage()));
@@ -180,6 +183,58 @@ public class ShipperServiceImpl implements ShipperService {
         shipperRepository.save(shipperEntity);
         return convertToDto(shipperEntity);
     }
+
+    @Override
+    public ShipperResponseDto registerNewShipper(ShipperRequest shipperRequest) throws MessagingException {
+        Shipper shipper = Shipper.builder()
+                .name(shipperRequest.getName())
+                .phone(shipperRequest.getPhone())
+                .licenseNumber(shipperRequest.getLicenseNumber())
+                .licenseIssueDate(shipperRequest.getLicenseIssueDate())
+                .idCardNumber(shipperRequest.getIdCardNumber())
+                .idCardIssueDate(shipperRequest.getIdCardIssueDate())
+                .idCardIssuePlace(shipperRequest.getIdCardIssuePlace())
+                .vehicleType(shipperRequest.getVehicleType())
+                .isActive(true)
+                .isLocked(false)
+                .build();;
+        shipper.setEmail(shipperRequest.getEmail());
+        JavaMailSender javaMailSender = getJavaMailSender();
+        MimeMessage msg = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true, StandardCharsets.UTF_8.name());
+        String password = BaseUtils.generatePassword(12);
+
+        helper.setFrom(email);
+        helper.setTo(shipperRequest.getEmail());
+        helper.setSubject("SEND RESET PASSWORD");
+        helper.setText(password);
+        javaMailSender.send(msg);
+        var hashPass = passwordEncoder.encode(password);
+        shipper.setHashPassword(hashPass);
+        try {
+            var dbResult = shipperRepository.save(shipper);
+            return convertToDto(dbResult);
+        } catch (Exception ex) {
+            throw new ActionFailedException(
+                    String.format("Something happen when adding new shipper to system: %s", ex.getMessage()));
+        }
+    }
+
+    @Override
+    public ShipperResponseDto updateUser(BigDecimal id, ShipperRequest shipperRequest) {
+        Shipper userDb = shipperRepository.findById(id).orElseThrow(() -> new NotFoundException(
+                String.format("Can't found shipper with id: %s", id.toString())));
+
+        Shipper updateEntity = addUpdateFieldToAdminEntity(shipperRequest, userDb);
+        try {
+            updateEntity = shipperRepository.save(updateEntity);
+            return convertToDto(updateEntity);
+        } catch (Exception ex) {
+            throw new ActionFailedException(
+                    String.format("Username duplicated or something else error: %s", ex.getMessage()));
+        }
+    }
+
     private ShipperResponseDto convertToDto(Shipper item) {
         return ShipperResponseDto.builder()
                 .id(item.getId())
@@ -188,5 +243,22 @@ public class ShipperServiceImpl implements ShipperService {
                 .isActive(item.getIsActive())
                 .isLocked(item.getIsLocked())
                 .build();
+    }
+
+    private Shipper addUpdateFieldToAdminEntity(ShipperRequest request, Shipper shipperEntity) {
+        if (shipperEntity == null || request == null) {
+            throw new ValidationFailedException(
+                    "Request or Admin entity is null on function::addUpdateFieldToAdminEntity");
+        }
+        shipperEntity.setName(request.getName());
+        shipperEntity.setPhone(request.getPhone());
+        shipperEntity.setLicenseNumber(request.getLicenseNumber());
+        shipperEntity.setLicenseIssueDate(request.getLicenseIssueDate());
+        shipperEntity.setIdCardNumber(request.getIdCardNumber());
+        shipperEntity.setIdCardIssuePlace(request.getIdCardIssuePlace());
+        shipperEntity.setLicenseIssueDate(request.getLicenseIssueDate());
+        shipperEntity.setVehicleType(request.getVehicleType());
+
+        return shipperEntity;
     }
 }

@@ -43,7 +43,7 @@ public class AdminServiceImpl implements AdminService {
     public AdminResponse importNewUser(AdminRequest adminRequest) {
         var admin = new Admin();
         admin.setFullName(adminRequest.getFullName());
-        admin.setIsActive(false);
+        admin.setIsActive(true);
         admin.setIsLocked(false);
         String password = BaseUtils.generatePassword(12);
         passwordEncoder.encode(password);

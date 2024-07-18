@@ -32,10 +32,10 @@ public class StoreLevelServiceImpl implements StoreLevelService {
         try {
             Page<StoreLevelResponse> storeLevelPage = storeLevelRepository.searchAnyByParameter(parameterList, pageable)
             .map(item -> StoreLevelResponse.builder()
-            .id(item.getId())
-            .level(item.getLevel())
+            .id(item.getId()).level(item.getLevel())
             .fromPoint(item.getFromPoint())
             .toPoint(item.getToPoint())
+            .description(item.getDescription())
             .build());
             return new PaginationResponse<>(storeLevelPage);
         } catch (Exception ex ) {
