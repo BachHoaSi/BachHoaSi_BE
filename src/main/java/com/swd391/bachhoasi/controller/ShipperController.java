@@ -95,6 +95,20 @@ public class ShipperController {
         );
     }
 
+    @PatchMapping("{id}")
+    public ResponseEntity<ResponseObject> activeShipper(@PathVariable(name = "id") BigDecimal id) {
+        var result = shipperService.activeAccount(id);
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("ACTIVE_SHIPPER_ACCOUNT_SUCCESS")
+                        .isSuccess(true)
+                        .data(result)
+                        .message("Active Account Success")
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+
     @Operation(summary = "Register new shipper", description = "Register new shipper, system will send password to shipper email")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")

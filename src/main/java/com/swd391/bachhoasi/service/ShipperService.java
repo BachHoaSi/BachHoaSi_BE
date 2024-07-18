@@ -19,4 +19,5 @@ public interface ShipperService {
     ShipperResponseDto resetPassword(BigDecimal id) throws MessagingException;
     ShipperResponseDto registerNewShipper(ShipperRequest shipperRequest) throws MessagingException;
     ShipperResponseDto updateUser(BigDecimal id, ShipperRequest shipperRequest);
+    ShipperResponseDto activeAccount(BigDecimal id);
 }
