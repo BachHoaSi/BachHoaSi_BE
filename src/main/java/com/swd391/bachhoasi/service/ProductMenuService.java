@@ -9,10 +9,11 @@ import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.OrderResponse;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ProductMenuDetail;
+import com.swd391.bachhoasi.model.dto.response.ProductMenuResponse;
 
 public interface ProductMenuService {
     ProductMenuDetail addProductMenu(BigDecimal menuId,ProductMenuRequest productMenuRequest);
     ProductMenuDetail updateProductMenu(BigDecimal menuId, ProductMenuRequest productMenuRequest);
-    PaginationResponse<ProductMenuDetail> getProductMenues(SearchRequestParamsDto request);
+    PaginationResponse<ProductMenuResponse> getProductMenues(SearchRequestParamsDto request);
     List<ProductMenuDTO> getAvailableProductMenu();
 }

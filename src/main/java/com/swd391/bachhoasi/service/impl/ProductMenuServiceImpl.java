@@ -3,10 +3,7 @@ package com.swd391.bachhoasi.service.impl;
 import com.swd391.bachhoasi.model.dto.request.ProductMenuDTO;
 import com.swd391.bachhoasi.model.dto.request.ProductMenuRequest;
 import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
-import com.swd391.bachhoasi.model.dto.response.OrderResponse;
-import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
-import com.swd391.bachhoasi.model.dto.response.ProductMenuDetail;
-import com.swd391.bachhoasi.model.dto.response.ProductResponse;
+import com.swd391.bachhoasi.model.dto.response.*;
 import com.swd391.bachhoasi.model.entity.Product;
 import com.swd391.bachhoasi.model.entity.ProductMenu;
 import com.swd391.bachhoasi.model.entity.ProductMenuId;
@@ -56,10 +53,11 @@ public class ProductMenuServiceImpl implements ProductMenuService {
     }
 
     @Override
-    public PaginationResponse<ProductMenuDetail> getProductMenues(SearchRequestParamsDto request) {
+    public PaginationResponse<ProductMenuResponse> getProductMenues(SearchRequestParamsDto request) {
         try {
-            Page<ProductMenuDetail> orderPage = productMenuRepository.searchAnyByParameter(request.search(), request.pagination())
-                    .map(item -> ProductMenuDetail.builder()
+            Page<ProductMenuResponse> orderPage = productMenuRepository.searchAnyByParameter(request.search(), request.pagination())
+                    .map(item -> ProductMenuResponse.builder()
+                            .id(item.getId())
                             .menuId(item.getComposeId().getMenu().getId())
                             .productId(item.getComposeId().getProduct().getId())
                             .basePrice(item.getBasePrice())

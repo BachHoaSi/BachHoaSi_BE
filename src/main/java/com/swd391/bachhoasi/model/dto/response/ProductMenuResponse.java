@@ -1,12 +1,15 @@
 package com.swd391.bachhoasi.model.dto.response;
 
-import java.math.BigDecimal;
-
 import lombok.Builder;
 import lombok.Data;
+
+import java.math.BigDecimal;
+
 @Data
 @Builder
-public class ProductMenuDetail {
+public class ProductMenuResponse {
+    private BigDecimal id;
+    private BigDecimal productId;
     private BigDecimal menuId;
     private BigDecimal basePrice;
     private Boolean status;
