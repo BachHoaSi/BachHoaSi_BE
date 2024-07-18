@@ -8,6 +8,7 @@ import lombok.Data;
 @Builder
 public class ProductMenuDetail {
     private BigDecimal menuId;
+    private BigDecimal productId;
     private BigDecimal basePrice;
     private Boolean status;
     private String adminName;

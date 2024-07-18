@@ -24,7 +24,7 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductMenu implements Serializable {
+public class    ProductMenu implements Serializable {
     @EmbeddedId
     private ProductMenuId composeId;
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
