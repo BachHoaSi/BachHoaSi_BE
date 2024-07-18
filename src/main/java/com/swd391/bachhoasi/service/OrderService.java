@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.service;
 
+import com.swd391.bachhoasi.model.constant.OrderStatus;
 import com.swd391.bachhoasi.model.dto.request.NewOrderRequest;
 import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.OrderDetailResponse;
@@ -15,4 +16,5 @@ public interface OrderService {
     OrderDetailResponse getDetailOrder(BigDecimal orderId);
     public OrderResponse acceptOrder(BigDecimal orderId);
     OrderResponse cancelOrder(BigDecimal orderId);
+    OrderResponse changeOrderStatus (BigDecimal orderId, OrderStatus status);
 }

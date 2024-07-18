@@ -248,6 +248,18 @@ public class OrderServiceImpl implements OrderService {
         return convertOrderToOrderResponse(order.get());
     }
 
+    public OrderResponse changeOrderStatus (BigDecimal orderId, OrderStatus status) {
+        var statusAllow = List.of(OrderStatus.ACCEPTED,OrderStatus.DELIVERED, OrderStatus.PICKED_UP);
+        var order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Not found order with this ID"));
+        if (statusAllow.contains(status) && order.getOrderStatus() != OrderStatus.DELIVERED ) {
+            order.setOrderStatus(status);
+            orderRepository.save(order);
+            return convertOrderToOrderResponse(order);
+        } else {
+            throw new ValidationFailedException(String.format("Order can accepts when meet condition: %s", statusAllow.toString()));
+        }
+    }
+
     public static Map<BigDecimal, Integer> convertToMap(List<OrderProductMenu> orderProductMenus) {
         Map<BigDecimal, Integer> orderItems = new HashMap<>();
         for (OrderProductMenu opm : orderProductMenus) {
