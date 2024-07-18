@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi.controller;
 
+import com.swd391.bachhoasi.model.constant.OrderStatus;
 import com.swd391.bachhoasi.model.dto.request.NewOrderRequest;
 import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.OrderDetailResponse;
@@ -97,6 +98,19 @@ public class OrderController {
                 .data(orderResponse)
                 .code("CANCEL_ORDER_SUCCESS")
                 .message("Cancel order successfully")
+                .status(HttpStatus.OK)
+                .isSuccess(true)
+                .build();
+        return ResponseEntity.ok().body(responseObject);
+    }
+
+    @PatchMapping("change-status/{id}")
+    public ResponseEntity<ResponseObject> changeStatus (@PathVariable(name = "id") BigDecimal id, @RequestParam(name = "status") OrderStatus status) {
+        OrderResponse orderResponse = orderService.changeOrderStatus(id, status);
+        var responseObject = ResponseObject.builder()
+                .data(orderResponse)
+                .code("CHANGE_ORDER_STATUS_SUCCESS")
+                .message("Change order status successfully")
                 .status(HttpStatus.OK)
                 .isSuccess(true)
                 .build();
