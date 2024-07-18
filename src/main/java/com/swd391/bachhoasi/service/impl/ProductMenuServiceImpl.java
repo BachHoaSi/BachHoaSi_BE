@@ -72,8 +72,8 @@ public class ProductMenuServiceImpl implements ProductMenuService {
     }
 
     @Override
-    public List<ProductMenuDTO> getAvailableProductMenu() {
-        List<ProductMenu> productMenus = productMenuRepository.listAvalilble();
+    public List<ProductMenuDTO> getAvailableProductMenu(String name) {
+        List<ProductMenu> productMenus = productMenuRepository.listAvailable(name);
         List<ProductMenuDTO> productMenuDTOS = new ArrayList<>();
 
         for (ProductMenu productMenu : productMenus) {

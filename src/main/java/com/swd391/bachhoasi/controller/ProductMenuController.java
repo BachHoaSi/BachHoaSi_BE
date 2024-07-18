@@ -75,8 +75,8 @@ public class ProductMenuController {
     }
 
     @GetMapping("/available")
-    public ResponseEntity<ResponseObject> getProductMenusAvailable() {
-        List<ProductMenuDTO> productMenus = productMenuService.getAvailableProductMenu();
+    public ResponseEntity<ResponseObject> getProductMenusAvailable(@RequestParam(name = "name", required = false) String name) {
+        List<ProductMenuDTO> productMenus = productMenuService.getAvailableProductMenu(name);
         return ResponseEntity.ok(
                 ResponseObject.builder()
                         .code("PRODUCT_MENU_GET_SUCCESS")
