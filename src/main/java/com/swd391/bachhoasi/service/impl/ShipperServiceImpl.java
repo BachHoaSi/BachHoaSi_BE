@@ -231,7 +231,7 @@ public class ShipperServiceImpl implements ShipperService {
             return convertToDto(updateEntity);
         } catch (Exception ex) {
             throw new ActionFailedException(
-                    String.format("Username duplicated or something else error: %s", ex.getMessage()));
+                    String.format("Failed update Shipper with reason: %s", ex.getMessage()));
         }
     }
 

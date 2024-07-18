@@ -1,6 +1,8 @@
 package com.swd391.bachhoasi.controller;
 
+import com.swd391.bachhoasi.model.dto.request.ProductMenuDTO;
 import com.swd391.bachhoasi.model.dto.request.ProductMenuRequest;
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.ProductMenuDetail;
 import com.swd391.bachhoasi.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi.service.ProductMenuService;
@@ -8,7 +10,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,5 +51,41 @@ public class ProductMenuController {
                 .isSuccess(true)
                 .build();
         return ResponseEntity.ok().body(responseObject);
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseObject> getProductMenues(
+            @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pagination,
+            @RequestParam(required = false, name = "q") String query
+    ) {
+        var queryDto = SearchRequestParamsDto.builder()
+                .search(query)
+                .wrapSort(pagination)
+                .build();
+        var result = productMenuService.getProductMenues(queryDto);
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("PRODUCT_MENU_GET_SUCCESS")
+                        .isSuccess(true)
+                        .data(result)
+                        .message("Get Product Menu Success")
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<ResponseObject> getProductMenusAvailable() {
+        List<ProductMenuDTO> productMenus = productMenuService.getAvailableProductMenu();
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("PRODUCT_MENU_GET_SUCCESS")
+                        .isSuccess(true)
+                        .data(productMenus)
+                        .message("Get Product Menu Success")
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+
     }
 }

@@ -1,11 +1,13 @@
 package com.swd391.bachhoasi.service.impl;
 
+import com.swd391.bachhoasi.model.dto.request.ProductMenuDTO;
 import com.swd391.bachhoasi.model.dto.request.ProductMenuRequest;
-import com.swd391.bachhoasi.model.dto.response.ProductMenuDetail;
-import com.swd391.bachhoasi.model.dto.response.ProductResponse;
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
+import com.swd391.bachhoasi.model.dto.response.*;
 import com.swd391.bachhoasi.model.entity.Product;
 import com.swd391.bachhoasi.model.entity.ProductMenu;
 import com.swd391.bachhoasi.model.entity.ProductMenuId;
+import com.swd391.bachhoasi.model.exception.ActionFailedException;
 import com.swd391.bachhoasi.model.exception.NotFoundException;
 import com.swd391.bachhoasi.repository.MenuRepository;
 import com.swd391.bachhoasi.repository.ProductMenuRepository;
@@ -14,10 +16,13 @@ import com.swd391.bachhoasi.service.ProductMenuService;
 import com.swd391.bachhoasi.util.AuthUtils;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,8 +51,49 @@ public class ProductMenuServiceImpl implements ProductMenuService {
                 .productDetails(mapToProductResponse(updatedProductMenu.getComposeId().getProduct()))
                 .build();
     }
+
+    @Override
+    public PaginationResponse<ProductMenuResponse> getProductMenues(SearchRequestParamsDto request) {
+        try {
+            Page<ProductMenuResponse> orderPage = productMenuRepository.searchAnyByParameter(request.search(), request.pagination())
+                    .map(item -> ProductMenuResponse.builder()
+                            .id(item.getId())
+                            .menuId(item.getComposeId().getMenu().getId())
+                            .productId(item.getComposeId().getProduct().getId())
+                            .basePrice(item.getBasePrice())
+                            .status(item.getStatus())
+                            .adminName(item.getAdmin().getFullName())
+                            .productDetails(mapToProductResponse(item.getComposeId().getProduct()))
+                            .build());
+            return new PaginationResponse<>(orderPage);
+        } catch (Exception ex ) {
+            throw new ActionFailedException(ex.getMessage(), "ORDER_GET_FAILED");
+        }
+    }
+
+    @Override
+    public List<ProductMenuDTO> getAvailableProductMenu() {
+        List<ProductMenu> productMenus = productMenuRepository.listAvalilble();
+        List<ProductMenuDTO> productMenuDTOS = new ArrayList<>();
+
+        for (ProductMenu productMenu : productMenus) {
+            var product = productMenu.getComposeId().getProduct();
+            ProductMenuDTO dto = ProductMenuDTO.builder()
+                    .id(productMenu.getId())
+                    .productName(product.getName())
+                    .stockQuantity(product.getStockQuantity())
+                    .build();
+
+            productMenuDTOS.add(dto);
+        }
+
+        return productMenuDTOS;
+    }
+
+
     @Override
     public ProductMenuDetail addProductMenu(BigDecimal menuId, ProductMenuRequest productMenuRequest) {
+
         if (productMenuRequest == null)
             throw new NotFoundException("ProductMenu request is null");
         var productMenuId = new ProductMenuId();
