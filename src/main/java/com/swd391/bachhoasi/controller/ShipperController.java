@@ -93,4 +93,18 @@ public class ShipperController {
         );
     }
 
+    @PatchMapping("{id}")
+    public ResponseEntity<ResponseObject> activeShipper(@PathVariable(name = "id") BigDecimal id) {
+        var result = shipperService.activeAccount(id);
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("ACTIVE_SHIPPER_ACCOUNT_SUCCESS")
+                        .isSuccess(true)
+                        .data(result)
+                        .message("Active Account Success")
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+
 }

@@ -27,6 +27,7 @@ import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ShipperResponseDto;
 import com.swd391.bachhoasi.model.entity.Shipper;
 import com.swd391.bachhoasi.model.exception.NotFoundException;
+import com.swd391.bachhoasi.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi.repository.ShipperRepository;
 import com.swd391.bachhoasi.service.ShipperService;
 
@@ -168,6 +169,16 @@ public class ShipperServiceImpl implements ShipperService {
                         String.format("Something happen when reset password: %s", ex.getMessage()));
             }
 
+    }
+
+    public ShipperResponseDto activeAccount(BigDecimal id) {
+        var shipperEntity = shipperRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found shipper with this id"));
+        if (shipperEntity.getIsLocked().booleanValue()) {
+            throw new ValidationFailedException("Can't active an account when it is locked");
+        }
+        shipperEntity.setIsActive(true);
+        shipperRepository.save(shipperEntity);
+        return convertToDto(shipperEntity);
     }
     private ShipperResponseDto convertToDto(Shipper item) {
         return ShipperResponseDto.builder()

@@ -14,4 +14,5 @@ public interface ShipperService {
     ShipperResponseDto getShipperDetail(BigDecimal id);
     ShipperResponseDto getShipperWithLeastOrders();
     ShipperResponseDto resetPassword(BigDecimal id) throws MessagingException;
+    ShipperResponseDto activeAccount(BigDecimal id);
 }
