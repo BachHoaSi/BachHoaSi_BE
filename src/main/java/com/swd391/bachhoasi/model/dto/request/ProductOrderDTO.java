@@ -11,4 +11,5 @@ public class ProductOrderDTO {
     private BigDecimal id;
     private String productName;
     private Integer quantity;
+    private String urlImage;
 }
