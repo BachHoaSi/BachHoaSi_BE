@@ -7,6 +7,7 @@ import com.swd391.bachhoasi.repository.StoreTypeRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,7 @@ public class StoreServiceImpl implements StoreService{
             .status(item.getStatus())
             .location(item.getLocation())
             .storeStatus(item.getCreationStatus())
+             .storeLevel(storeLevel)
             .storeLevel(storeLevel)
             .build();
         });
@@ -68,10 +70,32 @@ public class StoreServiceImpl implements StoreService{
                     .storeLevel(updatedStore.getStoreLevel().getLevel())
                     .type(updatedStore.getType().getName())
                     .status(updatedStore.getStatus())
+                    .storeStatus(store.getCreationStatus())
                     .build();
         }catch (Exception e) {
             throw new ActionFailedException("Cannot update store, please check again !!!");
         }
+    }
+
+    @Override
+    public StoreResponseDto activateStore(BigDecimal id) {
+        Store store = storeRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Not found store with id: %s", id.toString())));
+        if (store.getCreationStatus().equals(StoreStatus.ACCEPTED))
+            throw new ActionFailedException("Cannot activate store because store is accepted");
+        store.setCreationStatus(StoreStatus.ACCEPTED);
+        store.setCreatedDate(new Date(System.currentTimeMillis()));
+
+        storeRepository.save(store);
+        return StoreResponseDto.builder()
+                .id(store.getId())
+                .name(store.getName())
+                .type(store.getType() == null ? "" : store.getType().getName())
+                .point(store.getPoint())
+                .status(store.getStatus())
+                .location(store.getLocation())
+                .storeLevel(store.getStoreLevel() == null ? 0 : store.getStoreLevel().getLevel())
+                .storeStatus(store.getCreationStatus())
+                .build();
     }
 
     public StoreResponseDto updateStoreRegisterReview(BigDecimal id, StoreStatus status) {
@@ -87,6 +111,7 @@ public class StoreServiceImpl implements StoreService{
             .status(item.getStatus())
             .location(item.getLocation())
             .storeLevel(item.getStoreLevel() == null ? 0 : item.getStoreLevel().getLevel())
+                .storeStatus(item.getCreationStatus())
             .build();
     }
     public StoreResponseDto disableStore(BigDecimal id) {
@@ -101,6 +126,8 @@ public class StoreServiceImpl implements StoreService{
             .status(item.getStatus())
             .location(item.getLocation())
             .storeLevel(item.getStoreLevel() == null ? 0 : item.getStoreLevel().getLevel())
-            .build();
+                .storeStatus(item.getCreationStatus())
+
+                .build();
     }
 }
