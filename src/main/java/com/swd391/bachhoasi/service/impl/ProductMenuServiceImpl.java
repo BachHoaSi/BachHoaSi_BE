@@ -67,7 +67,7 @@ public class ProductMenuServiceImpl implements ProductMenuService {
                             .build());
             return new PaginationResponse<>(orderPage);
         } catch (Exception ex ) {
-            throw new ActionFailedException(ex.getMessage(), "ORDER_GET_FAILED");
+            throw new ActionFailedException(ex.getMessage(), "PRODUCT_MENU_GET_FAILED");
         }
     }
 
@@ -113,6 +113,24 @@ public class ProductMenuServiceImpl implements ProductMenuService {
                 .adminName(updatedProductMenu.getAdmin().getFullName())
                 .productDetails(mapToProductResponse(updatedProductMenu.getComposeId().getProduct()))
                 .build();
+    }
+
+    public PaginationResponse<ProductMenuResponse> getProductMenuByMenuIdPagination(BigDecimal menuId, SearchRequestParamsDto query) {
+        try {
+            Page<ProductMenuResponse> orderPage = productMenuRepository.searchByParameterAndMenuId(query.search(), query.pagination(), menuId)
+                    .map(item -> ProductMenuResponse.builder()
+                            .id(item.getId())
+                            .menuId(item.getComposeId().getMenu().getId())
+                            .productId(item.getComposeId().getProduct().getId())
+                            .basePrice(item.getBasePrice())
+                            .status(item.getStatus())
+                            .adminName(item.getAdmin().getFullName())
+                            .productDetails(mapToProductResponse(item.getComposeId().getProduct()))
+                            .build());
+            return new PaginationResponse<>(orderPage);
+        } catch (Exception ex ) {
+            throw new ActionFailedException(ex.getMessage(), "PRODUCT_GET_FAILED");
+        }
     }
 
     public static ProductResponse mapToProductResponse(Product product) {

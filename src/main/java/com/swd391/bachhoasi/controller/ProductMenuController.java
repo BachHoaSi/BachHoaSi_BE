@@ -88,4 +88,24 @@ public class ProductMenuController {
         );
 
     }
+
+    @GetMapping("/${menuID}")
+    public ResponseEntity<ResponseObject> getProductMenusAvailable(@PathVariable(name = "menuID") BigDecimal menuId, @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pagination,
+    @RequestParam(required = false, name = "q") String query) {
+        var queryDto = SearchRequestParamsDto.builder()
+                .search(query)
+                .wrapSort(pagination)
+                .build();
+        var productMenus = productMenuService.getProductMenuByMenuIdPagination(menuId, queryDto);
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("PRODUCT_MENU_GET_SUCCESS")
+                        .isSuccess(true)
+                        .data(productMenus)
+                        .message("Get Product Menu Success")
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+
+    }
 }

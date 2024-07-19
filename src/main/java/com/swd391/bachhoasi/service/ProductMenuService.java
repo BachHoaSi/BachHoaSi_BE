@@ -12,6 +12,7 @@ import com.swd391.bachhoasi.model.dto.response.ProductMenuResponse;
 
 public interface ProductMenuService {
     ProductMenuDetail addProductMenu(BigDecimal menuId,ProductMenuRequest productMenuRequest);
+    PaginationResponse<ProductMenuResponse> getProductMenuByMenuIdPagination(BigDecimal menuId, SearchRequestParamsDto query);
     ProductMenuDetail updateProductMenu(BigDecimal menuId, ProductMenuRequest productMenuRequest);
     PaginationResponse<ProductMenuResponse> getProductMenues(SearchRequestParamsDto request);
     List<ProductMenuDTO> getAvailableProductMenu(String name);
