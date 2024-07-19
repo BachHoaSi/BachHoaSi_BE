@@ -23,7 +23,8 @@ public class WorkServiceImpl implements WorkService {
             ProductOrderDTO item = ProductOrderDTO.builder()
                     .id((BigDecimal) result[0])
                     .productName((String) result[1])
-                    .quantity(((Number) result[2]).intValue())
+                    .quantity(((Number) result[3]).intValue())
+                    .urlImage((String) result[2])
                     .build();
             response.add(item);
         }
