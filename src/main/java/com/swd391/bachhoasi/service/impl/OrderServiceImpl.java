@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
                 .createdDate(new Date(System.currentTimeMillis()))
                 .updatedDate(new Date(System.currentTimeMillis()))
                 .admin(loginUser)
-                .shipper(shipper)
+
                 .build();
         OrderContact orderContact = OrderContact.builder()
                 .buildingNumber(store.getLocation())
@@ -103,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
         }
         newOrder.setGrandTotal(totalPrice);
         newOrder.setSubTotal(subTotal);
-
+        newOrder.setShipper(shipper);
         int point = (int) (totalPrice.intValue() * 0.1); // 10% of total price
         newOrder.setPoint(point);
 
@@ -140,28 +140,37 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PaginationResponse<OrderResponse> getOrders(SearchRequestParamsDto request) {
-
         try {
             Page<OrderResponse> orderPage = orderRepository.searchAnyByParameter(request.search(), request.pagination())
-                    .map(item -> OrderResponse.builder()
-                            .orderId(item.getId())
-                            .totalPrice(item.getGrandTotal())
-                            .orderStatus(item.getOrderStatus())
-                            .deliveryTime(item.getOrderDate())
-                            .point(item.getPoint())
-                            .storeAddress(item.getOrderContact().getBuildingNumber())
-                            .orderFeedback(item.getOrderFeedback())
-                            .createdDate(item.getCreatedDate())
-                            .deliveryFeedback(item.getDeliveryFeedback())
-                            .storeName(item.getStore().getName())
-                            .payingMethod(item.getPayingMethod())
-                            .shipperName(item.getShipper().getName())
-                            .build());
+                    .map(item -> {
+                        OrderResponse.OrderResponseBuilder builder = OrderResponse.builder()
+                                .orderId(item.getId())
+                                .totalPrice(item.getGrandTotal())
+                                .orderStatus(item.getOrderStatus())
+                                .deliveryTime(item.getOrderDate())
+                                .point(item.getPoint())
+                                .storeAddress(item.getOrderContact().getBuildingNumber())
+                                .orderFeedback(item.getOrderFeedback())
+                                .createdDate(item.getCreatedDate())
+                                .deliveryFeedback(item.getDeliveryFeedback())
+                                .storeName(item.getStore().getName())
+                                .payingMethod(item.getPayingMethod());
+
+                        if (item.getShipper() != null) {
+                            builder.shipperName(item.getShipper().getName());
+                        } else {
+                            builder.shipperName("None"); // Ensuring shipperName is null if shipper is null
+                        }
+
+                        return builder.build();
+                    });
+
             return new PaginationResponse<>(orderPage);
-        } catch (Exception ex ) {
+        } catch (Exception ex) {
             throw new ActionFailedException(ex.getMessage(), "ORDER_GET_FAILED");
         }
     }
+
 
     public OrderDetailResponse getDetailOrder(BigDecimal orderId) {
         var orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Not found this order"));
@@ -215,8 +224,11 @@ public class OrderServiceImpl implements OrderService {
     }
     @Override
     public OrderResponse acceptOrder(BigDecimal orderId) {
+        ShipperResponseDto shipperResponseDto = shipperService.getShipperWithLeastOrders();
+        Shipper shipper = shipperRepository.findById(shipperResponseDto.getId()).get();
         var order = orderRepository.findById(orderId);
         if (order.isEmpty()) throw new NotFoundException("Order not found");
+
         if (order.get().getOrderStatus() != OrderStatus.PICKED_UP)
             throw new ActionFailedException("Order is not PICKED_UP");
         List<OrderProductMenu> orderProductMenuList = orderProductMenuRepository.findByOrderId(orderId);
@@ -248,6 +260,7 @@ public class OrderServiceImpl implements OrderService {
             productRepository.save(product);
         }
         order.get().setOrderStatus(OrderStatus.ACCEPTED);
+        order.get().setShipper(shipper);
         orderRepository.save(order.get());
 
         return convertOrderToOrderResponse(order.get());
