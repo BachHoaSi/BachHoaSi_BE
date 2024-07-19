@@ -120,6 +120,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     public OrderResponse convertOrderToOrderResponse(Order order){
+        var name = order.getShipper().getName();
         return OrderResponse.builder()
                 .orderId(order.getId())
                 .storeName(order.getOrderContact().getCustomerName())
@@ -132,6 +133,7 @@ public class OrderServiceImpl implements OrderService {
                 .payingMethod(order.getPayingMethod())
                 .point(order.getPoint())
                 .createdDate(order.getCreatedDate())
+                .shipperName(order.getShipper().getName())
                 .build();
     }
 
@@ -144,7 +146,7 @@ public class OrderServiceImpl implements OrderService {
                             .orderId(item.getId())
                             .totalPrice(item.getGrandTotal())
                             .orderStatus(item.getOrderStatus())
-                            .deliveryFeedback(item.getDeliveryFeedback())
+                            .deliveryTime(item.getOrderDate())
                             .point(item.getPoint())
                             .storeAddress(item.getOrderContact().getBuildingNumber())
                             .orderFeedback(item.getOrderFeedback())
@@ -152,6 +154,7 @@ public class OrderServiceImpl implements OrderService {
                             .deliveryFeedback(item.getDeliveryFeedback())
                             .storeName(item.getStore().getName())
                             .payingMethod(item.getPayingMethod())
+                            .shipperName(item.getShipper().getName())
                             .build());
             return new PaginationResponse<>(orderPage);
         } catch (Exception ex ) {
@@ -193,6 +196,7 @@ public class OrderServiceImpl implements OrderService {
             .paymentMethod(orderEntity.getPayingMethod())
             .grandTotal(orderEntity.getGrandTotal())
             .orderProductMenu(orderProductListResponse)
+            .shipperName(orderEntity.getShipper().getName())
         .build();
     }
 
@@ -213,7 +217,7 @@ public class OrderServiceImpl implements OrderService {
         var order = orderRepository.findById(orderId);
         if (order.isEmpty()) throw new NotFoundException("Order not found");
         if (order.get().getOrderStatus() != OrderStatus.PICKED_UP)
-            throw new ActionFailedException("Cannot pickup this order");
+            throw new ActionFailedException("Order is not PICKED_UP");
         List<OrderProductMenu> orderProductMenuList = orderProductMenuRepository.findByOrderId(orderId);
         if (orderProductMenuList.isEmpty())
             throw new NotFoundException("Cannot find order product");

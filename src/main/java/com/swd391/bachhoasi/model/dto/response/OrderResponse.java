@@ -51,4 +51,7 @@ public class OrderResponse {
 
     @Schema(description = "Date when the order was created")
     private Date createdDate;
+
+    private String shipperName;
+
 }
