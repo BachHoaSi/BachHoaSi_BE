@@ -39,6 +39,7 @@ public class StoreServiceImpl implements StoreService{
             .point(item.getPoint())
             .status(item.getStatus())
             .location(item.getLocation())
+            .storeStatus(item.getCreationStatus())
             .storeLevel(storeLevel)
             .build();
         });
