@@ -23,4 +23,7 @@ public class MenuResponse {
     
     @Schema(description = "Status of the menu")
     private Boolean status;
+    
+    @Schema(description = "Level of menu")
+    private Integer level;
 }
