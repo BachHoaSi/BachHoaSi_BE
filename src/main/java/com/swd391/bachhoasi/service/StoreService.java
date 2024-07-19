@@ -16,4 +16,5 @@ public interface StoreService {
     StoreResponseDto updateStoreRegisterReview(BigDecimal id, StoreStatus status);
     PaginationResponse<StoreResponseDto> getAllStore(SearchRequestParamsDto request);
     StoreResponseDto updateStore(StoreRequest storeRequest);
+    StoreResponseDto activateStore(BigDecimal id);
 }
