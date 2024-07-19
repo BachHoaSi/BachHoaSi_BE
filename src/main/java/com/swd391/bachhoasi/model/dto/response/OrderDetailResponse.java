@@ -31,4 +31,5 @@ public class OrderDetailResponse {
     private BigDecimal grandTotal;
     // Product order
     private List<OrderProductMenuResponse> orderProductMenu;
+    private String shipperName;
 }
