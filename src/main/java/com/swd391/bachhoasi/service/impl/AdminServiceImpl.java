@@ -79,7 +79,7 @@ public class AdminServiceImpl implements AdminService {
         if (userDb.getId().equals(id)) {
             throw new ValidationFailedException("Can't disable your self");
         }
-        if (currentUser.getRole().compareTo(userDb.getRole()) >= 0) {
+        if (currentUser.getRole().compareTo(userDb.getRole()) > 0) {
             try {
                 userDb.setIsActive(false);
                 userDb.setIsLocked(true);
