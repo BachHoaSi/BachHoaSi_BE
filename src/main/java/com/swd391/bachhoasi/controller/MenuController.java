@@ -3,6 +3,7 @@ package com.swd391.bachhoasi.controller;
 import java.math.BigDecimal;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,7 @@ public class MenuController {
     }
     @GetMapping
     @Operation(summary = "Get all menus")
-    public ResponseEntity<ResponseObject> getAllMenu(@RequestParam(name = "q") String q, @PageableDefault(page = 0, size = 20, sort = "id") Pageable page) {
+    public ResponseEntity<ResponseObject> getAllMenu(@RequestParam(name = "q", required = false) String q, @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable page) {
         var queryDto = SearchRequestParamsDto.builder()
         .search(q)
         .wrapSort(page)
