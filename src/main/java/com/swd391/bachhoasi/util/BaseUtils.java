@@ -54,7 +54,7 @@ public class BaseUtils {
 
     public static BigDecimal genRandomBigDecimalId() {
         Random random = new Random();
-        BigInteger integerPart = new BigInteger(128, random); // Generate a 128-bit random integer
+        BigInteger integerPart = new BigInteger(10, random);
         int scale = random.nextInt(10) + 1; // Random scale between 1 and 10 
         return new BigDecimal(integerPart).setScale(scale, RoundingMode.HALF_UP);
     }
