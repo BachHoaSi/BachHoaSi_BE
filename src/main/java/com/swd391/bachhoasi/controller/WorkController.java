@@ -28,10 +28,10 @@ public class WorkController {
         List<ProductOrderDTO> result = workService.getBestSellingProduct();
         return ResponseEntity.ok(
                 ResponseObject.builder()
-                        .code("STORE_LEVEL_GET_SUCCESS")
+                        .code("PRODUCTS_GET_SUCCESS")
                         .isSuccess(true)
                         .data(result)
-                        .message("Get Store Level Success")
+                        .message("Get Products Success")
                         .status(HttpStatus.OK)
                         .build()
         );
