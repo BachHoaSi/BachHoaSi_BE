@@ -89,7 +89,7 @@ public class ProductMenuController {
 
     }
 
-    @GetMapping("/${menuID}")
+    @GetMapping("/{menuID}")
     public ResponseEntity<ResponseObject> getProductMenusAvailable(@PathVariable(name = "menuID") BigDecimal menuId, @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pagination,
     @RequestParam(required = false, name = "q") String query) {
         var queryDto = SearchRequestParamsDto.builder()
