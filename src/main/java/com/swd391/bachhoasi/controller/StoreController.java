@@ -63,7 +63,7 @@ public class StoreController {
         );
     }
     @Operation(summary = "Update store review status", description = "Updates the review status of a store")
-    @PatchMapping("{id}")
+    @PatchMapping()
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> updateStoreReviewStatus(@Schema @RequestBody StoreReviewRequest request) {
         var result = storeService.updateStoreRegisterReview(request.id(), request.status());
