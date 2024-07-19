@@ -80,10 +80,11 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal subTotal = BigDecimal.ZERO;
         for(Map.Entry<BigDecimal,Integer> entry : orderItems.entrySet()){
             BigDecimal productId = entry.getKey();
-            if (!productRepository.findById(productId).get().getStatus().booleanValue()){
-                throw new ActionFailedException(productRepository.findById(productId).get().getName() + " not available");
+            ProductMenu productMenu = productMenuRepository.findBySubId(productId).orElseThrow(()-> new NotFoundException("Product menu not found"));
+            if (!productMenu.getStatus()){
+                throw new ActionFailedException(productRepository.findById(productMenu.getComposeId().getProduct().getId()).get().getName() + " not available");
             }
-            if (productRepository.findById(productId).get().getStockQuantity() < entry.getValue()){
+            if (productMenu.getComposeId().getProduct().getStockQuantity() < entry.getValue()){
                 throw new ActionFailedException(productRepository.findById(productId).get().getName() + " is not enough");
             }
         }
