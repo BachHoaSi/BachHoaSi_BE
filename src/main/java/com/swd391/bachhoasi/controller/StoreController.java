@@ -93,18 +93,18 @@ public class StoreController {
         );
     }
 
-    @Operation(summary = "Update store review status", description = "Updates the review status of a store")
+    @Operation(summary = "Active", description = "Updates store status to Accepted")
     @PatchMapping("active/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<ResponseObject> activeStore(@RequestParam BigDecimal id) {
         var result = storeService.activateStore(id);
         return ResponseEntity.ok(
                 ResponseObject.builder()
-                        .code("DISABLE_STORE_SUCCESS")
+                        .code("ACTIVATE_STORE_SUCCESS")
                         .data(result)
                         .isSuccess(true)
                         .status(HttpStatus.OK)
-                        .message("Disable Success")
+                        .message("Activate Success")
                         .build()
         );
     }
