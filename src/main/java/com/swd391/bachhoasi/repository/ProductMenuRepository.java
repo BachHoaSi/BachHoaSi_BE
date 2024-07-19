@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public interface ProductMenuRepository extends BaseBachHoaSiRepository<ProductMenu, ProductMenuId>{
@@ -33,6 +34,14 @@ public interface ProductMenuRepository extends BaseBachHoaSiRepository<ProductMe
        "AND pm.composeId.product.stockQuantity > 0 " +
        "AND (:name IS NULL OR pm.composeId.product.name LIKE %:name%)")
     List<ProductMenu> listAvailable(@Param("name") String name);
+
+    @Query("SELECT pm from ProductMenu pm " +
+            "JOIN pm.composeId.menu m " +
+            "JOIN m.storeLevel sl " +
+            "JOIN m.storeType st " +
+            "JOIN pm.composeId.product p " +
+            "WHERE p.status = true AND pm.status = true AND pm.id = :subId")
+    Optional<ProductMenu> findBySubId(BigDecimal subId);
 
     default Specification<ProductMenu> searchByParameterAndMenuIdSpecification(Map<String, String> param, BigDecimal menuId) {
         return (root, query, criteriaBuilder) -> {

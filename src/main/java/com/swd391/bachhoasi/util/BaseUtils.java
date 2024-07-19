@@ -1,6 +1,10 @@
 package com.swd391.bachhoasi.util;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.security.SecureRandom;
+import java.util.Random;
 import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -46,5 +50,12 @@ public class BaseUtils {
         .useUpper(true)
         .build();
         return passwordGen.generate(length);
+    }
+
+    public static BigDecimal genRandomBigDecimalId() {
+        Random random = new Random();
+        BigInteger integerPart = new BigInteger(128, random); // Generate a 128-bit random integer
+        int scale = random.nextInt(10) + 1; // Random scale between 1 and 10 
+        return new BigDecimal(integerPart).setScale(scale, RoundingMode.HALF_UP);
     }
 }

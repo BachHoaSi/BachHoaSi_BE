@@ -26,6 +26,7 @@ import com.swd391.bachhoasi.repository.StoreLevelRepository;
 import com.swd391.bachhoasi.repository.StoreTypeRepository;
 import com.swd391.bachhoasi.service.MenuService;
 import com.swd391.bachhoasi.util.AuthUtils;
+import com.swd391.bachhoasi.util.BaseUtils;
 
 import lombok.RequiredArgsConstructor;
 @Service
@@ -89,6 +90,7 @@ public class MenuServiceImpl implements MenuService {
         .status(menu.getStatus())
         .createdDate(menu.getCreatedDate())
         .updatedDate(menu.getUpdatedDate())
+        .level(menu.getStoreLevel().getLevel())
         .type(menu.getStoreType().getName())
         .build();
     } 
@@ -99,9 +101,17 @@ public class MenuServiceImpl implements MenuService {
                 .product(product)
                 .build();
         var admin = authUtils.getAdminUserFromAuthentication();
+        BigDecimal id = BigDecimal.ZERO;
+        while (true) {
+            id = BaseUtils.genRandomBigDecimalId();
+            if (!productMenuRepository.findBySubId(id).isPresent()) {
+                break;
+            }
+        }
         return ProductMenu.builder()
                 .composeId(productMenuId)
                 .basePrice(request.getPrice())
+                .id(id)
                 .admin(admin)
                 .status(request.getStatus())
                 .build();
