@@ -7,7 +7,9 @@ import java.util.Collection;
 import org.springframework.stereotype.Service;
 
 import com.swd391.bachhoasi.model.dto.request.ProductMenuRequest;
+import com.swd391.bachhoasi.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi.model.dto.response.MenuDetailResponse;
+import com.swd391.bachhoasi.model.dto.response.MenuResponse;
 import com.swd391.bachhoasi.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi.model.dto.response.ProductMenuDetail;
 import com.swd391.bachhoasi.model.entity.Menu;
@@ -74,6 +76,22 @@ public class MenuServiceImpl implements MenuService {
         var result = productMenuRepository.save(productMenuEntity);
         return convertProductMenuToProductMenuDetailDto(result);
     }
+
+    public PaginationResponse<MenuResponse> getAllMenu(SearchRequestParamsDto request) {
+        var menu = menuRepository.searchByParameter(request.search(),request.pagination())
+        .map(item -> convertMenuEntityToMenuResponse(item));
+        return new PaginationResponse<>(menu);
+    }
+
+    private MenuResponse convertMenuEntityToMenuResponse(Menu menu) {
+        return MenuResponse.builder()
+        .id(menu.getId())
+        .status(menu.getStatus())
+        .createdDate(menu.getCreatedDate())
+        .updatedDate(menu.getUpdatedDate())
+        .type(menu.getStoreType().getName())
+        .build();
+    } 
 
     private ProductMenu convertToProductMenuEntity(ProductMenuRequest request, Product product, Menu menu) {
         var productMenuId = ProductMenuId.builder()
