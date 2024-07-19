@@ -79,7 +79,7 @@ public class MenuServiceImpl implements MenuService {
 
     public PaginationResponse<MenuResponse> getAllMenu(SearchRequestParamsDto request) {
         var menu = menuRepository.searchByParameter(request.search(),request.pagination())
-        .map(item -> convertMenuEntityToMenuResponse(item));
+        .map(this::convertMenuEntityToMenuResponse);
         return new PaginationResponse<>(menu);
     }
 

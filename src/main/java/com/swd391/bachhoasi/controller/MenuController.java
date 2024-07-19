@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,7 +42,7 @@ public class MenuController {
         );
     }
     @PostMapping("/{id}")
-    public ResponseEntity<ResponseObject> addProductToMenu (ProductMenuRequest request, @PathVariable(name = "id") BigDecimal id) {
+    public ResponseEntity<ResponseObject> addProductToMenu (@RequestBody ProductMenuRequest request, @PathVariable(name = "id") BigDecimal id) {
         var result = menuService.addProductToMenu(id, request);
         return ResponseEntity.ok(
             ResponseObject.builder()
